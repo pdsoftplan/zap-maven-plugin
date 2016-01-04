@@ -1,0 +1,13 @@
+# Eclipse
+.settings/
+.classpath
+.project
+
+# Maven
+target/
+
+# TestNG
+test-output/
+
+# Local ZAP properties file
+zap-client-api/src/test/resources/local-zap.properties

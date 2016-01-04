@@ -1,0 +1,102 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>br.com.softplan.security.zap</groupId>
+		<artifactId>zap-maven-plugin-parent</artifactId>
+		<version>1.0.1-0-SNAPSHOT</version>
+		<relativePath>../zap-maven-plugin-parent</relativePath>
+	</parent>
+
+	<artifactId>zap-client-api</artifactId>
+	<name>ZAP Client API</name>
+
+	<properties>
+		<integrationTests.skipTests>true</integrationTests.skipTests>
+		<integrationTests.excludedGroups>disabled,analysis</integrationTests.excludedGroups>
+	</properties>
+
+	<profiles>
+		<profile>
+			<!-- To run the integration tests, run: mvn clean install -P runIT -->
+			<id>runIT</id>
+			<properties>
+				<integrationTests.skipTests>false</integrationTests.skipTests>
+			</properties>
+		</profile>
+
+		<profile>
+			<!-- This profile includes lengthy integration tests and should be used 
+				only by Jenkins for a complete build -->
+			<id>runAllIT</id>
+			<properties>
+				<integrationTests.skipTests>false</integrationTests.skipTests>
+				<integrationTests.excludedGroups>disabled</integrationTests.excludedGroups>
+			</properties>
+		</profile>
+
+		<profile>
+			<!-- Needed because of the classes brought from the ZAP Client API -->
+			<id>disable-java8-doclint</id>
+			<activation>
+				<jdk>[1.8,)</jdk>
+			</activation>
+			<properties>
+				<additionalparam>-Xdoclint:none</additionalparam>
+			</properties>
+		</profile>
+	</profiles>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.jopendocument</groupId>
+			<artifactId>jdom</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>br.com.softplan.security.zap</groupId>
+			<artifactId>zap-utils</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-configuration</groupId>
+			<artifactId>commons-configuration</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<configuration>
+					<skipTests>${integrationTests.skipTests}</skipTests>
+					<excludedGroups>${integrationTests.excludedGroups}</excludedGroups>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

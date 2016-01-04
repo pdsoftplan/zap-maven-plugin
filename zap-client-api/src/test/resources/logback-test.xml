@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+		<Target>System.out</Target>
+		<encoder>
+			<pattern>%-4relative [%thread] %-5level %logger - %msg%n</pattern>
+		</encoder>
+	</appender>
+	<root level="INFO">
+		<appender-ref ref="stdout" />
+	</root>
+	
+	<logger name="br.com.softplan.security.zapclient" level="DEBUG" />
+</configuration>
