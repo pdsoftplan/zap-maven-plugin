@@ -2,12 +2,21 @@
 
 > Check out the [ZAP SonarQube Plugin](https://github.com/pdsoftplan/sonar-zap)
 
-This plugin was developed to make it easier to integrate [OWASP Zed Attack Proxy (ZAP)](https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project) security tests with the application development and build process for Maven users. With this plugin, you can:
+This plugin makes it easier to integrate [OWASP Zed Attack Proxy (ZAP)](https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project) security tests with the application development and build process for Maven users. With this plugin, you can:
 
 - Run ZAP analysis during the build of your application;
 - Run authenticated analysis on [CAS](http://jasig.github.io/cas/) applications;
 - Use your Selenium integration tests navigation to feed ZAP;
 - Easily run ZAP analysis during development.
+
+## Contents
+
+- [Usage](#usage)
+- [Configuration Parameters](#configuration-parameters)
+- [Examples](#examples)
+    - [Using a running instance of ZAP](using-a-running-instance-of-zap)
+    - [Starting ZAP automatically](starting-zap-automatically)
+    - [Starting ZAP with Docker](starting-zap-with-docker)
 
 ## Usage
 
@@ -17,7 +26,7 @@ Generally, the plugin configuration will follow the format below:
 <plugin>
     <groupId>br.com.softplan.security.zap</groupId>
     <artifactId>zap-maven-plugin</artifactId>
-    <version>${zap.maven.plugin.version}</version>
+    <version>${zap-maven-plugin.version}</version>
     <configuration>
         <!-- Configuration parameters -->
     </configuration>
@@ -113,6 +122,136 @@ Notice that the parameters *excludeFromScan* and *protectedPages* accept multipl
 ```
 
 ## Examples
+
+### Using a running instance of ZAP
+
+For this to work, ZAP must already be running.
+
+```xml
+<plugin>
+    <groupId>br.com.softplan.security.zap</groupId>
+    <artifactId>zap-maven-plugin</artifactId>
+    <version>${zap-maven-plugin.version}</version>
+    <configuration>
+        <zapHost>localhost</zapHost>
+        <zapPort>8080</zapPort>
+        <target>http://localhost:8090/testwebapp</target>
+    </configuration>
+    <executions>
+        <execution>
+            <phase>verify</phase>
+            <goals><goal>analyze</goal></goals>
+        </execution>
+    </executions>
+</plugin>
+```
+
+### Starting ZAP automatically
+
+For ZAP to be automatically started, the option *zapPath* must be provided with the directory where ZAP is installed.
+
+```xml
+<plugin>
+	<groupId>br.com.softplan.security.zap</groupId>
+	<artifactId>zap-maven-plugin</artifactId>
+	<version>${zap.maven.plugin.version}</version>
+	<configuration>
+		<zapPort>8080</zapPort>
+		<target>http://localhost:8090/testwebapp</target>
+		<zapPath>C:\Program Files (x86)\OWASP\Zed Attack Proxy</zapPath>
+	</configuration>
+	<executions>
+		<execution>
+			<phase>verify</phase>
+			<goals><goal>analyze</goal></goals>
+		</execution>
+	</executions>
+</plugin>
+```
+
+> There is no need to inform the host in this case, since it will obviously be *localhost*.
+
+### Starting ZAP with Docker
+
+If ZAP is not installed, you can still start ZAP with Docker. For this, Docker must be installed and the option *shouldRunWithDocker* must be provided with value *true*.
+
+```xml
+<plugin>
+	<groupId>br.com.softplan.security.zap</groupId>
+	<artifactId>zap-maven-plugin</artifactId>
+	<version>${zap.maven.plugin.version}</version>
+	<configuration>
+		<zapPort>8080</zapPort>
+		<target>http://localhost:8090/testwebapp</target>
+		<shouldRunWithDocker>true</shouldRunWithDocker>
+	</configuration>
+	<executions>
+		<execution>
+			<phase>verify</phase>
+			<goals><goal>analyze</goal></goals>
+		</execution>
+	</executions>
+</plugin>
+```
+
+### Form authentication example
+
+```xml
+<plugin>
+	<groupId>br.com.softplan.security.zap</groupId>
+	<artifactId>zap-maven-plugin</artifactId>
+	<version>${zap.maven.plugin.version}</version>
+	<configuration>
+		<zapHost>localhost</zapHost>
+    	<zapPort>8080</zapPort>
+		<target>http://localhost:8180/bodgeit</target>
+
+		<authenticationType>form</authenticationType>
+		<username>user</username>
+		<password>pass</password>
+		<loginUrl>http://localhost:8180/bodgeit/login.jsp</loginUrl>
+		<loggedInRegex><![CDATA[\\Q<a href=\"logout.jsp\">Logout</a>\\E]]></loggedInRegex>
+	</configuration>
+	<executions>
+		<execution>
+			<phase>verify</phase>
+			<goals><goal>analyze</goal></goals>
+		</execution>
+	</executions>
+</plugin>
+```
+
+> Notice that it might be necessary to use the tag *![CDATA[]]* so the chars used within the parameter value are not parsed as part of the XML.
+
+### CAS authentication example
+
+```xml
+<plugin>
+	<groupId>br.com.softplan.security.zap</groupId>
+	<artifactId>zap-maven-plugin</artifactId>
+	<version>${zap.maven.plugin.version}</version>
+	<configuration>
+		<zapHost>localhost</zapHost>
+		<zapPort>8080</zapPort>
+		<target>https://localhost:8443/myapp</target>
+
+        <authenticationType>cas</authenticationType>
+        <username>bob</username>
+        <password>foo</password>
+        <loginUrl>https://localhost:8443/bouncer-server/login</loginUrl>
+        <protectedPage>https://localhost:8443/myapp/protected/index</protectedPage>
+        <loggedOutRegex><![CDATA[\\QLocation: https://localhost:8443/bouncer-server/\\E.*]]></loggedOutRegex>
+	</configuration>
+	<executions>
+		<execution>
+			<phase>verify</phase>
+			<goals><goal>analyze</goal></goals>
+		</execution>
+	</executions>
+</plugin>
+```
+
+> A good way to achieve re-authentication with CAS is defining the *loggedOutRegex* with a value like `\QLocation: https://your.domain/your-cas-server\E.*`. Unauthenticated responses will be redirects to the CAS server, so this is the easiest way to identifiy that there was a redirection to the CAS server and thus the user is not logged in.
 
 ## Selenium Integration
 
