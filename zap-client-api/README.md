@@ -74,7 +74,7 @@ While `ZapInfo` stores everything related to ZAP, `AuthenticationInfo` keeps all
 - `buildCasAuthenticationInfo()`
 - `buildFormAuthenticationInfo()`
 
-These methods make it easier to create `AuthenticationInfo` instances for each authentication type supported so far: CAS and form. Both methods receive as parameters the minimum necessary for each authentication type. However, it will normally be necessary to provide aditional parameters (to enable reauthentication, for instance). There are many options that can be set; the most common cases are presented below:
+These methods make it easier to create `AuthenticationInfo` instances for each authentication type supported so far: CAS and form. Both methods receive as parameters the minimum necessary for each authentication type. However, it will normally be necessary to provide aditional parameters (to enable re-authentication, for instance). There are many options that can be set; the most common cases are presented below:
 
 ```java
 // On form based authentication, the required parameters are just loginUrl, username and password
@@ -86,12 +86,12 @@ AuthenticationInfo formInfo = AuthenticationInfo.builder()
 AuthenticationInfo casInfo = AuthenticationInfo.builder()
         .buildCasAuthenticationInfo("http://myapp/login", "username", "password", "http://mydomain/myapp/protected/somePage");
 
-// To enable reauthentication (making sure the whole analysis will be authenticated), simply define a value for either loggedInRegex or loggedOutRegex
+// To enable re-authentication (making sure the whole analysis will be authenticated), simply define a value for either loggedInRegex or loggedOutRegex
 AuthenticationInfo formReauthInfo = AuthenticationInfo.builder()
         .loggedInRegex("\\Q<a href=\"logout.jsp\">Logout</a>\\E")
         .buildFormAuthenticationInfo("http://myapp/login", "username", "password");
 
-// It's possible to define pages that won't be authenticated (useful to exclude logout pages from the scan if reauthentication is not possible)
+// It's possible to define pages that won't be authenticated (useful to exclude logout pages from the scan if re-authentication is not possible)
 AuthenticationInfo formExcludeInfo = AuthenticationInfo.builder()
         .excludeFromScan("http://myapp/logout")
         .buildFormAuthenticationInfo("http://myapp/login", "username", "password");
