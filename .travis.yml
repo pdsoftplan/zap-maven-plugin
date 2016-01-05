@@ -7,4 +7,3 @@ jdk:
   
 before_install:
   - cd zap-maven-plugin-parent
-  
