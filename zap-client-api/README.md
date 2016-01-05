@@ -37,7 +37,7 @@ To use the API, one just needs to create those objects and call `analyze()`. The
 
 ### ZapInfo
 
-This class keeps all the necessary information regarding the ZAP instance that will be used. A builder is provided to make it easier to create objects with three main methods:
+This class keeps all the necessary information regarding the ZAP instance that will be used. A builder is provided to make it easier to create objects of this class. It has three main methods:
 
 - `buildToUseRunningZap()`
 - `buildToRunZap()`
@@ -69,19 +69,19 @@ ZapInfo runningZapInfoWithTimeout = ZapInfo.builder().initializationTimeoutInMil
 
 ### AuthenticationInfo
 
-While `ZapInfo` stores everything related to ZAP, `AuthenticationInfo` keeps all the parameters needed for authentication. A builder is also provided to help create objects of this class with two main methods:
+While `ZapInfo` stores everything related to ZAP, `AuthenticationInfo` keeps all the parameters needed for authentication. A builder is also provided to help create objects of this class. It has two main methods:
 
 - `buildCasAuthenticationInfo()`
 - `buildFormAuthenticationInfo()`
 
-These methods make it easier to create `AuthenticationInfo` instances for each authentication type supported so far: CAS and form. Both methods receive as parameters the minimum necessary for each authentication type. However, normally it will be necessary to provide aditional parameters (to enable reauthentication, for instance). There are many options that can be set, here are the most common cases:
+These methods make it easier to create `AuthenticationInfo` instances for each authentication type supported so far: CAS and form. Both methods receive as parameters the minimum necessary for each authentication type. However, it will normally be necessary to provide aditional parameters (to enable reauthentication, for instance). There are many options that can be set; the most common cases are presented below:
 
 ```java
 // On form based authentication, the required parameters are just loginUrl, username and password
 AuthenticationInfo formInfo = AuthenticationInfo.builder()
         .buildFormAuthenticationInfo("http://myapp/login", "username", "password");
 
-// For CAS authentication, it's also necessary to informa a protected page for each context that will be analyzed
+// For CAS authentication, it's also necessary to inform a protected page for each context that will be analyzed
 // This page will be automatically accessed after authentication and before ZAP's scan, avoiding redirections during the scan
 AuthenticationInfo casInfo = AuthenticationInfo.builder()
         .buildCasAuthenticationInfo("http://myapp/login", "username", "password", "http://mydomain/myapp/protected/somePage");
@@ -91,7 +91,7 @@ AuthenticationInfo formReauthInfo = AuthenticationInfo.builder()
         .loggedInRegex("\\Q<a href=\"logout.jsp\">Logout</a>\\E")
         .buildFormAuthenticationInfo("http://myapp/login", "username", "password");
 
-// It's possible to define pages that won't be authenticated (useful to exclude logout pages from the scan, in case reauthentication is not possible
+// It's possible to define pages that won't be authenticated (useful to exclude logout pages from the scan if reauthentication is not possible)
 AuthenticationInfo formExcludeInfo = AuthenticationInfo.builder()
         .excludeFromScan("http://myapp/logout")
         .buildFormAuthenticationInfo("http://myapp/login", "username", "password");
@@ -105,17 +105,15 @@ This tiny class keeps information related to the analysis:
 - `analysisTimeoutInMinutes`: analysis timeout;
 - `analysisType`: analysis type. There are three types available: `WITH_SPIDER`, `WITH_AJAX_SPIDER` e `ACTIVE_SCAN_ONLY`.
 
-These types are defined in the [`AnalysisType`](src/main/java/br/com/softplan/security/zap/api/model/AnalysisType.java) enum. `WITH_SPIDER` is the default type, which executes [ZAP's Spider](https://github.com/zaproxy/zap-core-help/wiki/HelpStartConceptsSpider) before the [Active Scan](https://github.com/zaproxy/zap-core-help/wiki/HelpStartConceptsAscan). For applications that rely on AJAX, it might be interesting to execute the available AJAX Spider after the default Spider. The type `WITH_AJAX_SPIDER` defines this strategy. Lastly, `ACTIVE_SCAN_ONLY` executes only the Active Scan. This is useful when the application navigation was done through a proxy with ZAP via Selenium tests and there is no need to run the Spider, for instance.
+These types are defined in the [`AnalysisType`](src/main/java/br/com/softplan/security/zap/api/model/AnalysisType.java) enum. `WITH_SPIDER` is the default type, which executes [ZAP's Spider](https://github.com/zaproxy/zap-core-help/wiki/HelpStartConceptsSpider) before the [Active Scan](https://github.com/zaproxy/zap-core-help/wiki/HelpStartConceptsAscan). For applications that rely on AJAX, it might be interesting to execute the available [AJAX Spider](https://github.com/zaproxy/zap-core-help/wiki/HelpAddonsSpiderAjaxConcepts) after the default Spider is executed. The type `WITH_AJAX_SPIDER` defines this strategy. Lastly, `ACTIVE_SCAN_ONLY` executes only the Active Scan. This is useful when the application navigation was done through a proxy with ZAP (via Selenium tests, for instance) and there is no need to run the Spider.
 
 The `AnalysisInfo` instance is passed to `ZapClient`'s `analyze()` method. Therefore, it's possible to execute different analysis from the same `ZapClient` instance.
 
 ### ZapReport
 
-The `analyze()` method returns a `ZapReport` instance that holds the reports generated by ZAP. Besides those, a new report is also generated with all the URLs visited by the Spider. This is important because this report can be used to show if the Spider, in fact, did navigate through the application. Depending on these results, it might be possible to conclude if the authentication worked or not, for instance.
+The `analyze()` method returns a `ZapReport` instance that holds the reports generated by ZAP. Besides those, a new report is also generated with all the URLs visited by the Spider. This new report is important because it can be used to show if the Spider did, in fact, navigate through the application. Depending on these results, it might be possible to conclude if the authentication actually worked.
 
 ## Examples
-
-Execução de análise em um ZAP que já está em execução:
 
 Running an analysis on an executing instance of ZAP:
 
@@ -128,20 +126,15 @@ System.out.println(zapReport.getHtmlReportAsString());
 System.out.println(zapReport.getHtmlSpiderResultsAsString());
 ```
 
-Running an analysis with automatic ZAP initialization and CAS authentication:
+Running an analysis with automatic ZAP initialization and form authentication:
 
 ```java
 ZapInfo zapInfo = ZapInfo.builder().buildToRunZap(8080, "C:\\ZAP");
 AuthenticationInfo authenticationInfo = AuthenticationInfo.builder()
-        .loggedOutRegex("\\QLocation: https://my-domain.com:8443/my-cas-server/\\E.*")
-        .buildCasAuthenticationInfo(
-            "https://my-domain.com:8443/my-cas-server/login", 
-            "user", 
-            "pass", 
-            "https://my-domain.com:8443/my-cas-app/protected/index"
-        );
+        .loggedInRegex("\\Q<a href=\"logout.jsp\">Logout</a>\\E")
+        .buildFormAuthenticationInfo("http://localhost:8090/bodgeit/login.jsp", "user", "pass");
 ZapClient zapClient = new ZapClient(zapInfo, authenticationInfo);
-ZapReport zapReport = zapClient.analyze(new AnalysisInfo("https://my-domain.com:8443/my-cas-app", 120));
+ZapReport zapReport = zapClient.analyze(new AnalysisInfo("http://localhost:8090/bodgeit", 120));
 
 System.out.println(zapReport.getHtmlReportAsString());
 System.out.println(zapReport.getHtmlSpiderResultsAsString());
