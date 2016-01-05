@@ -80,7 +80,7 @@ zapOptions           | Options that will be used to automatically start ZAP     
 initializationTimeoutInMillis | ZAP's automatic initialization timeout in milliseconds    | No  | 120
 reportPath  | Absolute or relative path where the generated reports will be saved         | No  | ${user.dir}/target/zapReports
 
-> To automatically start ZAP, it must be installed locally and the option *zapPath* must be provided. To use ZAP with Docker, Docker must be locally installed and the option *shouldRunWithDocker* must be passed as *true*. In both cases, by default, ZAP is initialized with the following options:
+> To automatically start ZAP, it must be installed locally and the option *zapPath* must be provided. To start ZAP with Docker, Docker must be locally installed and the option *shouldRunWithDocker* must be passed as *true*. In both cases, by default, ZAP is initialized with the following options:
 > ```
 > -daemon -config api.disablekey=true -config api.incerrordetails=true -config proxy.ip=0.0.0.0 -port ${zapPort}
 > ```
@@ -226,7 +226,7 @@ If ZAP is not installed, you can still start ZAP with Docker. For this, Docker m
 </plugin>
 ```
 
-> Notice that it might be necessary to use the tag *![CDATA[]]* so the chars used within the parameter value are not parsed as part of the XML.
+> Notice that it might be necessary to use the tag *![CDATA[]]* so the characters used within the parameter value are not parsed as part of the XML.
 
 ### CAS authentication example
 
@@ -256,7 +256,7 @@ If ZAP is not installed, you can still start ZAP with Docker. For this, Docker m
 </plugin>
 ```
 
-> A good way to achieve re-authentication with CAS is defining the *loggedOutRegex* with a value like `\QLocation: https://your.domain/your-cas-server\E.*`. Unauthenticated responses will be redirects to the CAS server, so this is the easiest way to identifiy that there was a redirection to the CAS server and thus the user is not logged in.
+> A good way to achieve re-authentication with CAS is defining the *loggedOutRegex* with a value like `\QLocation: https://your.domain/your-cas-server\E.*`. Unauthenticated responses will be redirects to the CAS server, so this is the easiest way to identify that there was a redirection to the CAS server and thus the user is not logged in.
 
 ## Selenium Integration
 
@@ -271,26 +271,26 @@ The first step to feed ZAP with your integration tests navigation is to ensure t
 
     // HtmlUnit
     driver = new HtmlUnitDriver();
-	((HtmlUnitDriver) driver).setProxy(PROXY_HOST, PROXY_PORT);
+	((HtmlUnitDriver) driver).setProxy(ZAP_HOST, ZAP_PORT);
 	
 	// Firefox
 	FirefoxProfile profile = new FirefoxProfile();
 	profile.setPreference("network.proxy.type", 1); // 1 = 'Manual proxy configuration'
 	profile.setPreference("network.proxy.share_proxy_settings", true);
 	profile.setPreference("network.proxy.no_proxies_on", "");
-    profile.setPreference("network.proxy.http", PROXY_HOST);
-    profile.setPreference("network.proxy.http_port", PROXY_PORT);
+    profile.setPreference("network.proxy.http", ZAP_HOST);
+    profile.setPreference("network.proxy.http_port", ZAP_PORT);
     driver = new FirefoxDriver(profile);
 	
 	// Chrome
 	Proxy proxy = new Proxy(); // org.openqa.selenium.Proxy
-	proxy.setHttpProxy(PROXY_HOST + ":" + PROXY_PORT);
+	proxy.setHttpProxy(ZAP_HOST + ":" + ZAP_PORT);
 	DesiredCapabilities capabilities = DesiredCapabilities.chrome();
 	capabilities.setCapability("proxy", proxy);
 	driver = new ChromeDriver(capabilities);
 ```
 
-With that done, all that remains is the plugin configuration:
+With that done, all that remains are the plugin goals configuration:
 
 ```xml
 <plugin>
@@ -298,7 +298,7 @@ With that done, all that remains is the plugin configuration:
     <artifactId>zap-maven-plugin</artifactId>
     <version>${zap.maven.plugin.version}</version>
     <configuration>
-		<!-- Whatever configuration -->
+		<!-- whatever configuration -->
 	</configuration>
 	<executions>
 		<execution>
