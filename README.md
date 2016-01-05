@@ -14,9 +14,11 @@ This plugin makes it easier to integrate [OWASP Zed Attack Proxy (ZAP)](https://
 - [Usage](#usage)
 - [Configuration Parameters](#configuration-parameters)
 - [Examples](#examples)
-    - [Using a running instance of ZAP](using-a-running-instance-of-zap)
-    - [Starting ZAP automatically](starting-zap-automatically)
-    - [Starting ZAP with Docker](starting-zap-with-docker)
+    - [Using a running instance of ZAP](#using-a-running-instance-of-zap)
+    - [Starting ZAP automatically](#starting-zap-automatically)
+    - [Starting ZAP with Docker](#starting-zap-with-docker)
+    - [Form authentication example](#form-authentication-example)
+    - [CAS authentication example](#cas-authentication-example)
 
 ## Usage
 
