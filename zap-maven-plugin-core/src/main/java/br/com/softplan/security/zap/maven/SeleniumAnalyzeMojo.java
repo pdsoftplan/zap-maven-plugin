@@ -29,15 +29,14 @@ public class SeleniumAnalyzeMojo extends ZapMojo {
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		getLog().info("Starting ZAP analysis at target: " + super.getTarget());
 		
-		ZapInfo zapInfo = super.buildZapInfo();
-		AuthenticationInfo authenticationInfo = super.buildAuthenticationInfo();
-		
-		AnalysisInfo analysisInfo = super.buildAnalysisInfo(AnalysisType.ACTIVE_SCAN_ONLY);
+		ZapInfo zapInfo = buildZapInfo();
+		AuthenticationInfo authenticationInfo = buildAuthenticationInfo();
+		AnalysisInfo analysisInfo = buildAnalysisInfo(AnalysisType.ACTIVE_SCAN_ONLY);
 
 		ZapClient zapClient = new ZapClient(zapInfo, authenticationInfo);
 		try {
 			ZapReport zapReport = zapClient.analyze(analysisInfo);
-			super.saveReport(zapReport);
+			saveReport(zapReport);
 		} finally {
 			Zap.stopZap();
 		}

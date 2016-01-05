@@ -22,18 +22,17 @@ import br.com.softplan.security.zap.commons.boot.Zap;
 public class AnalyzeMojo extends ZapMojo {
 	
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		getLog().info("Starting ZAP analysis at target: " + super.getTarget());
+		getLog().info("Starting ZAP analysis at target: " + getTarget());
 		
-		ZapInfo zapInfo = super.buildZapInfo();
-		AuthenticationInfo authenticationInfo = super.buildAuthenticationInfo();
-		
-		AnalysisInfo analysisInfo = super.buildAnalysisInfo();
+		ZapInfo zapInfo = buildZapInfo();
+		AuthenticationInfo authenticationInfo = buildAuthenticationInfo();
+		AnalysisInfo analysisInfo = buildAnalysisInfo();
 
 		ZapClient zapClient = new ZapClient(zapInfo, authenticationInfo);
 		try {
 			Zap.startZap(zapInfo);
 			ZapReport zapReport = zapClient.analyze(analysisInfo);
-			super.saveReport(zapReport);
+			saveReport(zapReport);
 		} finally {
 			Zap.stopZap();
 		}
