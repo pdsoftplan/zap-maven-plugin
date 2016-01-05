@@ -19,6 +19,7 @@ This plugin makes it easier to integrate [OWASP Zed Attack Proxy (ZAP)](https://
     - [Starting ZAP with Docker](#starting-zap-with-docker)
     - [Form authentication example](#form-authentication-example)
     - [CAS authentication example](#cas-authentication-example)
+- [Selenium Integration](#selenium-integration)
 
 ## Usage
 
@@ -256,5 +257,60 @@ If ZAP is not installed, you can still start ZAP with Docker. For this, Docker m
 > A good way to achieve re-authentication with CAS is defining the *loggedOutRegex* with a value like `\QLocation: https://your.domain/your-cas-server\E.*`. Unauthenticated responses will be redirects to the CAS server, so this is the easiest way to identifiy that there was a redirection to the CAS server and thus the user is not logged in.
 
 ## Selenium Integration
+
+If your application has Selenium integration tests that navigate through the application, it might be interesting to feed ZAP with the visited pages instead of relying on ZAP's Spider. The Spider can't ensure a complete navigation through the application. Besides that, by feeding ZAP with the visited pages, it's possible to define the analysis scope, since ZAP's tests will only be executed on the pages that were visited during the tests.
+
+The goals *startZap* and *seleniumAnalyze* were developed because of this. With them, it's possible to start ZAP before the integration tests and execute the analysis after the tests, using the navigation done by the tests.
+
+The first step to feed ZAP with your integration tests navigation is to ensure the tests use ZAP as a proxy. This way, all requests made during the tests execution go through ZAP. The configuration needed for the most common drivers are presented bellow:
+
+```java
+    WebDriver driver;
+
+    // HtmlUnit
+    driver = new HtmlUnitDriver();
+	((HtmlUnitDriver) driver).setProxy(PROXY_HOST, PROXY_PORT);
+	
+	// Firefox
+	FirefoxProfile profile = new FirefoxProfile();
+	profile.setPreference("network.proxy.type", 1); // 1 = 'Manual proxy configuration'
+	profile.setPreference("network.proxy.share_proxy_settings", true);
+	profile.setPreference("network.proxy.no_proxies_on", "");
+    profile.setPreference("network.proxy.http", PROXY_HOST);
+    profile.setPreference("network.proxy.http_port", PROXY_PORT);
+    driver = new FirefoxDriver(profile);
+	
+	// Chrome
+	Proxy proxy = new Proxy(); // org.openqa.selenium.Proxy
+	proxy.setHttpProxy(PROXY_HOST + ":" + PROXY_PORT);
+	DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+	capabilities.setCapability("proxy", proxy);
+	driver = new ChromeDriver(capabilities);
+```
+
+With that done, all that remains is the plugin configuration:
+
+```xml
+<plugin>
+    <groupId>br.com.softplan.security.zap</groupId>
+    <artifactId>zap-maven-plugin</artifactId>
+    <version>${zap.maven.plugin.version}</version>
+    <configuration>
+		<!-- Whatever configuration -->
+	</configuration>
+	<executions>
+		<execution>
+			<id>start-zap</id>
+			<phase>pre-integration-test</phase>
+			<goals><goal>startZap</goal></goals>
+		</execution>
+		<execution>
+			<id>selenium-analyze</id>
+			<phase>post-integration-test</phase>
+			<goals><goal>seleniumAnalyze</goal></goals>
+		</execution>
+	</executions>
+</plugin>
+```
 
 :zap:
