@@ -5,6 +5,7 @@
 This plugin was developed to make it easier to integrate [OWASP Zed Attack Proxy (ZAP)](https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project) security tests with the application development and build process for Maven users. With this plugin, you can:
 
 - Run ZAP analysis during the build of your application;
+- Run authenticated analysis on [CAS](http://jasig.github.io/cas/) applications;
 - Use your Selenium integration tests navigation to feed ZAP;
 - Easily run ZAP analysis during development.
 
@@ -36,11 +37,11 @@ Generally, the plugin configuration will follow the format below:
 
 The main goal provided is *analyze*, responsible to execute a ZAP analysis according to the configuration parameters. However, the plugin also provides other goals for more specific situations. The list of available goals is presented bellow:
 
-- *analyze*: performs a complete analysis running the [Spider](https://github.com/zaproxy/zap-core-help/wiki/HelpStartConceptsSpider) before the [Active Scan](https://github.com/zaproxy/zap-core-help/wiki/HelpStartConceptsAscan) and starting ZAP automatially if necessary (and closing it after the analysis).
+- *analyze*: performs a complete analysis running the [Spider](https://github.com/zaproxy/zap-core-help/wiki/HelpStartConceptsSpider) before the [Active Scan](https://github.com/zaproxy/zap-core-help/wiki/HelpStartConceptsAscan) and starting ZAP automatically if necessary (and closing it after the analysis).
 - *startZap*: simply starts ZAP (via local installation or Docker).
 - *seleniumAnalyze*: assumes ZAP is already executing and simply runs the Active Scan, closing ZAP after the analysis. This goal is useful when there are Selenium integration tests that are executed with a proxy to ZAP and the navigation done by the tests should be used instead of the Spider. More on that at [Selenium Integration](#selenium-integration).
 
-The goals that run analysis save the generated reports in the end of the plugin execution. By default, the plugins are saved in the directory `target/zap-reports` within the project. The parameter *reportPath* can be used to specify another directory (absolute or relative).
+The goals that run analysis save the generated reports in the end of the plugin execution. By default, the reports are saved in the directory `target/zap-reports` within the project. The parameter *reportPath* can be used to specify another directory (absolute or relative).
 
 ## Configuration Parameters
 
