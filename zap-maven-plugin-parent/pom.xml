@@ -4,15 +4,72 @@
 
 	<groupId>br.com.softplan.security.zap</groupId>
 	<artifactId>zap-maven-plugin-parent</artifactId>
-	<version>1.0.1-0-SNAPSHOT</version>
+	<version>1.0.1-0</version>
 	<packaging>pom</packaging>
+	
 	<name>ZAP Maven Plugin Parent</name>
+	<description>Parent project for the ZAP Maven Plugin</description>
+	<url>https://github.com/pdsoftplan/zap-maven-plugin</url>
+	<inceptionYear>2015</inceptionYear>
+	<organization>
+		<name>Softplan</name>
+		<url>https://www.softplan.com.br</url>
+	</organization>
 
 	<modules>
 		<module>../zap-utils</module>
 		<module>../zap-client-api</module>
 		<module>../zap-maven-plugin-core</module>
 	</modules>
+
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>tfcporciuncula</id>
+			<name>Thiago Porciúncula</name>
+			<email>thiago.porciuncula@softplan.com.br</email>
+			<organization>Softplan</organization>
+		</developer>
+		<developer>
+			<id>fabio.resner</id>
+			<name>Fábio Resner</name>
+			<email>fabio.resner@softplan.com.br</email>
+			<organization>Softplan</organization>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:git@github.com:pdsoftplan/zap-maven-plugin.git</connection>
+		<developerConnection>scm:git:git@github.com:pdsoftplan/zap-maven-plugin.git</developerConnection>
+		<url>https://github.com/pdsoftplan/zap-maven-plugin</url>
+	</scm>
+
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/pdsoftplan/zap-maven-plugin/issues</url>
+	</issueManagement>
+	<ciManagement>
+		<system>Travis</system>
+		<url>https://travis-ci.org/pdsoftplan/zap-maven-plugin</url>
+	</ciManagement>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
 
 	<properties>
 		<java.version>1.7</java.version>
@@ -25,6 +82,8 @@
 		<maven-source-plugin.version>2.4</maven-source-plugin.version>
 		<maven-failsafe-plugin.version>2.19</maven-failsafe-plugin.version>
 		<maven-plugin-plugin.version>3.4</maven-plugin-plugin.version>
+		<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+		<nexus-staging-maven-plugin.version>1.6.6</nexus-staging-maven-plugin.version>
 
 		<!-- Dependencies versions -->
 		<jdom.version>1.1.1</jdom.version>
@@ -45,49 +104,41 @@
 				<artifactId>jdom</artifactId>
 				<version>${jdom.version}</version>
 			</dependency>
-
 			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-lang3</artifactId>
 				<version>${commons-lang.version}</version>
 			</dependency>
-
 			<dependency>
 				<groupId>commons-io</groupId>
 				<artifactId>commons-io</artifactId>
 				<version>${commons-io.version}</version>
 			</dependency>
-
 			<dependency>
 				<groupId>commons-configuration</groupId>
 				<artifactId>commons-configuration</artifactId>
 				<version>${commons-configuration.version}</version>
 			</dependency>
-
 			<dependency>
 				<groupId>org.apache.maven</groupId>
 				<artifactId>maven-plugin-api</artifactId>
 				<version>${maven-plugin-api.version}</version>
 			</dependency>
-
 			<dependency>
 				<groupId>org.apache.maven.plugin-tools</groupId>
 				<artifactId>maven-plugin-annotations</artifactId>
 				<version>${maven-plugin-annotations.version}</version>
 			</dependency>
-
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
 				<version>${slf4j.version}</version>
 			</dependency>
-
 			<dependency>
 				<groupId>ch.qos.logback</groupId>
 				<artifactId>logback-classic</artifactId>
 				<version>${logback.version}</version>
 			</dependency>
-
 			<dependency>
 				<groupId>org.testng</groupId>
 				<artifactId>testng</artifactId>
@@ -100,7 +151,6 @@
 				<artifactId>zap-utils</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-
 			<dependency>
 				<groupId>br.com.softplan.security.zap</groupId>
 				<artifactId>zap-client-api</artifactId>
@@ -182,5 +232,69 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>${maven-source-plugin.version}</version>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>${maven-javadoc-plugin.version}</version>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+                			<additionalparam>-Xdoclint:none</additionalparam>
+            			</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>${maven-gpg-plugin.version}</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+						<version>${nexus-staging-maven-plugin.version}</version>
+						<extensions>true</extensions>
+						<configuration>
+							<serverId>ossrh</serverId>
+							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+							<autoReleaseAfterClose>true</autoReleaseAfterClose>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>

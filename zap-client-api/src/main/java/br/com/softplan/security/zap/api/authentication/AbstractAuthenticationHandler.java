@@ -6,14 +6,14 @@ import java.nio.charset.StandardCharsets;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.zaproxy.clientapi.core.ApiResponse;
-import org.zaproxy.clientapi.core.ApiResponseElement;
-import org.zaproxy.clientapi.core.ClientApi;
-import org.zaproxy.clientapi.core.ClientApiException;
 
 import br.com.softplan.security.zap.api.exception.ZapClientException;
 import br.com.softplan.security.zap.api.model.AuthenticationInfo;
 import br.com.softplan.security.zap.commons.ZapInfo;
+import br.com.softplan.security.zap.zaproxy.clientapi.core.ApiResponse;
+import br.com.softplan.security.zap.zaproxy.clientapi.core.ApiResponseElement;
+import br.com.softplan.security.zap.zaproxy.clientapi.core.ClientApi;
+import br.com.softplan.security.zap.zaproxy.clientapi.core.ClientApiException;
 
 /**
  * Base class to handle authentication.

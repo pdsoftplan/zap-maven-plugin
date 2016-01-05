@@ -5,12 +5,58 @@
 	<parent>
 		<groupId>br.com.softplan.security.zap</groupId>
 		<artifactId>zap-maven-plugin-parent</artifactId>
-		<version>1.0.1-0-SNAPSHOT</version>
+		<version>1.0.1-0</version>
 		<relativePath>../zap-maven-plugin-parent</relativePath>
 	</parent>
 
 	<artifactId>zap-utils</artifactId>
+	
 	<name>ZAP Utils</name>
+	<description>Utils module responsible for ZAP automatic initialization</description>
+	<url>https://github.com/pdsoftplan/zap-maven-plugin</url>
+	<inceptionYear>2015</inceptionYear>
+	<organization>
+		<name>Softplan</name>
+		<url>https://www.softplan.com.br</url>
+	</organization>
+
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	
+	<developers>
+		<developer>
+			<id>tfcporciuncula</id>
+			<name>Thiago Porciúncula</name>
+			<email>thiago.porciuncula@softplan.com.br</email>
+			<organization>Softplan</organization>
+		</developer>
+		<developer>
+			<id>fabio.resner</id>
+			<name>Fábio Resner</name>
+			<email>fabio.resner@softplan.com.br</email>
+			<organization>Softplan</organization>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:git@github.com:pdsoftplan/zap-maven-plugin.git</connection>
+		<developerConnection>scm:git:git@github.com:pdsoftplan/zap-maven-plugin.git</developerConnection>
+		<url>https://github.com/pdsoftplan/zap-maven-plugin</url>
+	</scm>
+
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/pdsoftplan/zap-maven-plugin/issues</url>
+	</issueManagement>
+	<ciManagement>
+		<system>Travis</system>
+		<url>https://travis-ci.org/pdsoftplan/zap-maven-plugin</url>
+	</ciManagement>
 
 	<dependencies>
 		<dependency>

@@ -4,15 +4,15 @@ import static br.com.softplan.security.zap.api.authentication.AbstractAuthentica
 import static org.testng.Assert.*;
 
 import org.testng.annotations.Test;
-import org.zaproxy.clientapi.core.ApiResponse;
-import org.zaproxy.clientapi.core.ApiResponseElement;
-import org.zaproxy.clientapi.core.ApiResponseList;
-import org.zaproxy.clientapi.core.ApiResponseSet;
-import org.zaproxy.clientapi.core.ClientApiException;
 
 import br.com.softplan.security.zap.api.exception.ZapClientException;
 import br.com.softplan.security.zap.api.model.AuthenticationInfo;
 import br.com.softplan.security.zap.api.util.BaseIT;
+import br.com.softplan.security.zap.zaproxy.clientapi.core.ApiResponse;
+import br.com.softplan.security.zap.zaproxy.clientapi.core.ApiResponseElement;
+import br.com.softplan.security.zap.zaproxy.clientapi.core.ApiResponseList;
+import br.com.softplan.security.zap.zaproxy.clientapi.core.ApiResponseSet;
+import br.com.softplan.security.zap.zaproxy.clientapi.core.ClientApiException;
 
 public class AbstractAuthenticationHandlerIT extends BaseIT {
 
