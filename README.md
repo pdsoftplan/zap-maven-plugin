@@ -81,8 +81,8 @@ loginUrl           | Login page URL                                  | Yes, for 
 username           | Username used in the authentication             | Yes, for authenticated analysis
 password           | Password used in the authentication             | Yes, for authenticated analysis
 extraPostData      | Used to define any extra parameters that must be passed in the authentication request (e.g. *domain=someDomain&param=value*) | No
-loggedInRegex      | Regex that identifies a pattern in authenticated responses (needed to allow authentication)     | No
-loggedOutRegex     | Regex that identifies a pattern in non-authenticated responses (needed to allow authentication) | No
+loggedInRegex      | Regex that identifies a pattern in authenticated responses (needed to allow re-authentication)     | No
+loggedOutRegex     | Regex that identifies a pattern in non-authenticated responses (needed to allow re-authentication) | No
 excludeFromScan    | Define the URLs that will be excluded from the scan | No
 
 CAS only authentication parameter:
