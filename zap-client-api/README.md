@@ -140,5 +140,4 @@ System.out.println(zapReport.getHtmlReportAsString());
 System.out.println(zapReport.getHtmlSpiderResultsAsString());
 ```
 
----
 :zap:
