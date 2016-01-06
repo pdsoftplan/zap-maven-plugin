@@ -241,11 +241,13 @@ If ZAP is not installed, you can still start ZAP with Docker. For this, Docker m
 		<target>https://localhost:8443/myapp</target>
 
         <authenticationType>cas</authenticationType>
-        <username>bob</username>
-        <password>foo</password>
-        <loginUrl>https://localhost:8443/bouncer-server/login</loginUrl>
-        <protectedPage>https://localhost:8443/myapp/protected/index</protectedPage>
-        <loggedOutRegex><![CDATA[\\QLocation: https://localhost:8443/bouncer-server/\\E.*]]></loggedOutRegex>
+        <username>user</username>
+        <password>pass</password>
+        <loginUrl>https://localhost:8443/cas-server/login</loginUrl>
+        <protectedPages>
+            <protectedPage>https://localhost:8443/myapp/protected/index</protectedPage>
+        </protectedPages>
+        <loggedOutRegex><![CDATA[\\QLocation: https://localhost:8443/cas-server/\\E.*]]></loggedOutRegex>
 	</configuration>
 	<executions>
 		<execution>
