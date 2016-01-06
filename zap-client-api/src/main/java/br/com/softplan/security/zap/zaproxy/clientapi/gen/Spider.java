@@ -181,7 +181,7 @@ public class Spider {
 	/**
 	 * Runs the spider against the given URL. Optionally, the 'maxChildren' parameter can be set to limit the number of children scanned, the 'recurse' parameter can be used to prevent the spider from seeding recursively and the parameter 'contextName' can be used to constrain the scan to a Context.
 	 */
-	public ApiResponse scan(String apikey, String url, String maxchildren, String recurse, String contextname) throws ClientApiException {
+	public ApiResponse scan(String apikey, String url, String maxchildren, String recurse/*, String contextname*/) throws ClientApiException {
 		Map<String, String> map = null;
 		map = new HashMap<String, String>();
 		if (apikey != null) {
@@ -190,7 +190,7 @@ public class Spider {
 		map.put("url", url);
 		map.put("maxChildren", maxchildren);
 		map.put("recurse", recurse);
-		map.put("contextName", contextname);
+//		map.put("contextName", contextname);
 		return api.callApi("spider", "action", "scan", map);
 	}
 
