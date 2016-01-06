@@ -1,6 +1,7 @@
 # ZAP Maven Plugin
 
 [![Build Status](https://travis-ci.org/pdsoftplan/zap-maven-plugin.svg?branch=master)](https://travis-ci.org/pdsoftplan/zap-maven-plugin)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/br.com.softplan.security.zap/zap-maven-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/br.com.softplan.security.zap/zap-maven-plugin)
 
 > Check out the [ZAP SonarQube Plugin](https://github.com/pdsoftplan/sonar-zap)
 
