@@ -27,7 +27,7 @@ To use the API, just add the following dependency to your project:
 </dependency>
 ```
 
-Available versions can be found [here](). TODO: add link to Maven Central when the artifact is available there.
+Available versions can be found [here](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22br.com.softplan.security.zap%22%20AND%20a%3A%22zap-client-api%22).
 
 ## API
 
