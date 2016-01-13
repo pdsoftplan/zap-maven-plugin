@@ -5,13 +5,13 @@
 	<parent>
 		<groupId>br.com.softplan.security.zap</groupId>
 		<artifactId>zap-maven-plugin-parent</artifactId>
-		<version>1.0.1-0</version>
+		<version>1.0.2-0-SNAPSHOT</version>
 		<relativePath>../zap-maven-plugin-parent</relativePath>
 	</parent>
 
 	<artifactId>zap-maven-plugin</artifactId>
-	
 	<packaging>maven-plugin</packaging>
+	
 	<name>ZAP Maven Plugin</name>
 	<description>OWASP Zed Attack Proxy (ZAP) Maven plugin</description>
 	<url>https://github.com/pdsoftplan/zap-maven-plugin</url>
