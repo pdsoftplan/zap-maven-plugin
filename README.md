@@ -67,6 +67,7 @@ Parameter | Description | Required? | Default
 target                   | URL of the application that will be scanned  | Yes | -
 analysisTimeoutInMinutes | Analysis timeout in minutes                  | No  | 480
 shouldRunAjaxSpider      | Indicates whether ZAP should execute the [AJAX Spider](https://github.com/zaproxy/zap-core-help/wiki/HelpAddonsSpiderAjaxConcepts) after the default Spider (it can improve the scan on applications that rely on AJAX)     | No  | false
+shouldStartNewSession    | Indicates whether a new session should be started on ZAP before the analysis | No | true
 
 ZAP related parameters:
 
