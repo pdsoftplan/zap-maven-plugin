@@ -44,11 +44,11 @@ function authenticate(helper, paramsValues, credentials) {
     var casInputValues = getCASInputValues(get.getResponseBody().toString());
     
     // Build the request body using the credentials values and the CAS values obtained from the first request
-    requestBody  = "username="   + encodeURIComponent(credentials.getParam("username"));
-    requestBody += "&password="  + encodeURIComponent(credentials.getParam("password"));
-    requestBody += "&lt="        + encodeURIComponent(casInputValues["lt"]);
-    requestBody += "&execution=" + encodeURIComponent(casInputValues["execution"]);
-    requestBody += "&_eventId="  + encodeURIComponent(casInputValues["_eventId"]);
+    var requestBody  = "username="   + encodeURIComponent(credentials.getParam("username"));
+    requestBody     += "&password="  + encodeURIComponent(credentials.getParam("password"));
+    requestBody     += "&lt="        + encodeURIComponent(casInputValues["lt"]);
+    requestBody     += "&execution=" + encodeURIComponent(casInputValues["execution"]);
+    requestBody     += "&_eventId="  + encodeURIComponent(casInputValues["_eventId"]);
     
     // Add any extra post data provided
     extraPostData = paramsValues.get("extraPostData");
@@ -103,6 +103,7 @@ function authenticate(helper, paramsValues, credentials) {
     client.getParams().setParameter(HttpClientParams.ALLOW_CIRCULAR_REDIRECTS, false);
     
     print("---- CAS authentication script has finished ----\n");
+    
     return post;
 }
 
@@ -128,17 +129,17 @@ function getHttpClientFromHelper(helper) {
     return clientField.get(httpSender);
 }
 
-function getRequiredParamsNames(){
+function getRequiredParamsNames() {
     return ["loginUrl", "protectedPages"];
     // The protectedPages parameter will normally have a value similar to http://your.domain/your-app/protected/index.html.
     // If your CAS server happens to handle authentication for more than one app (which is the usual case), and you intend
     // to scan those apps as well, make sure to provide one protected page for each app separated by comma.
 }
 
-function getOptionalParamsNames(){
+function getOptionalParamsNames() {
     return ["extraPostData"];
 }
 
-function getCredentialsParamsNames(){
+function getCredentialsParamsNames() {
     return ["username", "password"];
 }
