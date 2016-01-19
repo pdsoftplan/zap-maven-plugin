@@ -16,6 +16,7 @@ This plugin makes it easier to integrate [OWASP Zed Attack Proxy (ZAP)](https://
 
 - [Usage](#usage)
 - [Configuration Parameters](#configuration-parameters)
+- [Authentication Strategies](#authentication-strategies)
 - [Examples](#examples)
     - [Using a running instance of ZAP](#using-a-running-instance-of-zap)
     - [Starting ZAP automatically](#starting-zap-automatically)
@@ -145,6 +146,14 @@ Notice that the parameters *excludeFromScan*, *protectedPages* and *sessionToken
     <token>LtpaToken2</token>
 </sessionTokens>
 ```
+
+## Authentication Strategies
+
+There are three ways to perform authenticated scans with the ZAP Maven Plugin. The first and most simple one is the form based authentication. This should be used for very simple form authentications (like the one found in the [bodgeit](https://github.com/psiinon/bodgeit) application), where all you need to authenticate is a simple POST request. This strategy uses ZAP's form authentication mechanism, thus reauthentication is possible (through *loggedIn* and *loggedOutRegex* parameters).
+
+It's also possible to run authenticated scans on applications that use [CAS](http://jasig.github.io/cas/). This strategy uses ZAP's script authentication mechanism with a script to perform the CAS authentication. It might not work for all possible CAS configurations (there are many), and as with the form authentication, reauthentication is possible.
+
+The last strategy uses [Selenium](http://www.seleniumhq.org). The idea is to perform the authentication via Selenium, and pass to ZAP the session created (i.e. the session cookie). This should work in most situations, including more complex form based authentications. However, reauthentication is not possible.
 
 ## Examples
 
