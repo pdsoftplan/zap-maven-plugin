@@ -7,6 +7,10 @@ package br.com.softplan.security.zap.api.model;
  */
 public enum AnalysisType {
 	
-	WITH_SPIDER, WITH_AJAX_SPIDER, ACTIVE_SCAN_ONLY;
+	WITH_SPIDER, 
+	WITH_AJAX_SPIDER, 
+	ACTIVE_SCAN_ONLY, 
+	SPIDER_ONLY, 
+	SPIDER_AND_AJAX_SPIDER_ONLY;
 	
 }

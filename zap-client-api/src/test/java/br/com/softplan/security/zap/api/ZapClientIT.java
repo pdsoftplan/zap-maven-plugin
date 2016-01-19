@@ -18,11 +18,9 @@ public class ZapClientIT extends BaseIT {
 	private static final String TARGET_404_URL = "http://server17:8180/404";
 	private static final String WRONG_TARGET_URL = "http://blabla.blablabla";
 	
-	private static final int ANALYSIS_TIMEOUT = 240;
-
 	@Test
 	public void shouldGenerateAndSaveTheReports() {
-		ZapReport zapReport = zapClient.analyze(new AnalysisInfo(TARGET_404_URL, ANALYSIS_TIMEOUT));
+		ZapReport zapReport = zapClient.analyze(AnalysisInfo.builder().targetUrl(TARGET_404_URL).build());
 		File zapReportFile = ZapReportUtil.saveHtmlReport(zapReport);
 		
 		assertTrue(zapReportFile.exists());
@@ -32,7 +30,7 @@ public class ZapClientIT extends BaseIT {
 
 	@Test(expectedExceptions = ZapClientException.class)
 	public void shouldFailInCasoOfAnInvalidTargetUrl() {
-		zapClient.analyze(new AnalysisInfo(WRONG_TARGET_URL, ANALYSIS_TIMEOUT));
+		zapClient.analyze(AnalysisInfo.builder().targetUrl(WRONG_TARGET_URL).build());
 	}
 
 }

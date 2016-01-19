@@ -17,9 +17,10 @@ public final class AuthenticationHandlerFactory {
 		}
 		
 		switch (authenticationInfo.getType()) {
-			case FORM: return new FormAuthenticationHandler(api, zapInfo, authenticationInfo);
-			case CAS:  return new CasAuthenticationHandler(api, zapInfo, authenticationInfo);
-			default:   return null;
+			case FORM:     return new FormAuthenticationHandler(api, zapInfo, authenticationInfo);
+			case CAS:      return new CasAuthenticationHandler(api, zapInfo, authenticationInfo);
+			case SELENIUM: return new SeleniumAuthenticationHandler(api, zapInfo, authenticationInfo);
+			default:       return null;
 		}
 	}
 

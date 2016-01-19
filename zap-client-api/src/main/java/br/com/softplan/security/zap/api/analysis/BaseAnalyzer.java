@@ -54,6 +54,9 @@ public abstract class BaseAnalyzer implements Analyzer {
 
 	protected void runSpider(AnalysisInfo analysisInfo) {
 		String targetUrl = analysisInfo.getTargetUrl();
+		if (analysisInfo.getSpiderStartingPointUrl() != null) {
+			targetUrl = analysisInfo.getSpiderStartingPointUrl();
+		}
 		LOGGER.info("{} : {}", ScanType.SPIDER, targetUrl);
 
 		try {
@@ -69,6 +72,9 @@ public abstract class BaseAnalyzer implements Analyzer {
 	
 	protected void runAjaxSpider(AnalysisInfo analysisInfo) {
 		String targetUrl = analysisInfo.getTargetUrl();
+		if (analysisInfo.getSpiderStartingPointUrl() != null) {
+			targetUrl = analysisInfo.getSpiderStartingPointUrl();
+		}
 		LOGGER.info("{} : {}", ScanType.AJAX_SPIDER, targetUrl);
 
 		try {
@@ -84,10 +90,13 @@ public abstract class BaseAnalyzer implements Analyzer {
 	@SuppressWarnings("restriction")
 	protected void runActiveScan(AnalysisInfo analysisInfo) {
 		String targetUrl = analysisInfo.getTargetUrl();
+		if (analysisInfo.getActiveScanStartingPointUrl() != null) {
+			targetUrl = analysisInfo.getActiveScanStartingPointUrl();
+		}
 		LOGGER.info("{} : {}", ScanType.ACTIVE_SCAN, targetUrl);
 
 		try {
-			ApiResponse resp = api.ascan.scan(apiKey, targetUrl, "True", "False", "", "", "");
+			ApiResponse resp = api.ascan.scan(apiKey, targetUrl, "True", "True", "", "", "");
 			String scanId = ((ApiResponseElement) resp).getValue();
 
 			waitForScanToFinish(scanId, ScanType.ACTIVE_SCAN);

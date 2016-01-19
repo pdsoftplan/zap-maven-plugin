@@ -74,6 +74,7 @@
 	<properties>
 		<java.version>1.7</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
 
 		<!-- Maven plugins versions -->
 		<maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
@@ -86,6 +87,7 @@
 
 		<!-- Dependencies versions -->
 		<jdom.version>1.1.1</jdom.version>
+		<selenium.version>2.49.0</selenium.version>
 		<commons-lang.version>3.4</commons-lang.version>
 		<commons-io.version>2.4</commons-io.version>
 		<commons-configuration.version>1.10</commons-configuration.version>
@@ -102,6 +104,11 @@
 				<groupId>org.jopendocument</groupId>
 				<artifactId>jdom</artifactId>
 				<version>${jdom.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.seleniumhq.selenium</groupId>
+				<artifactId>selenium-java</artifactId>
+				<version>${selenium.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.commons</groupId>

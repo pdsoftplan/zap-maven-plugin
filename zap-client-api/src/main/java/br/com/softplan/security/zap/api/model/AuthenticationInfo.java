@@ -1,5 +1,9 @@
 package br.com.softplan.security.zap.api.model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -13,7 +17,10 @@ import br.com.softplan.security.zap.api.authentication.AuthenticationInfoValidat
  */
 public final class AuthenticationInfo {
 
-	private static final String DEFAULT_LOGIN_REQUEST_DATA = "username={%username%}&password={%password%}";
+	private static final String DEFAULT_USERNAME_PARAMETER = "username";
+	private static final String DEFAULT_PASSWORD_PARAMETER = "password";
+	private static final String DEFAULT_LOGIN_REQUEST_DATA = DEFAULT_USERNAME_PARAMETER + "={%username%}&" + DEFAULT_PASSWORD_PARAMETER + "={%password%}";
+	private static final SeleniumDriver DEFAULT_SELENIUM_DRIVER = SeleniumDriver.FIREFOX;
 	
 	private AuthenticationType type;
 	private String loginUrl;
@@ -26,6 +33,10 @@ public final class AuthenticationInfo {
 	private String[] protectedPages;
 	private String protectedPagesSeparatedByComma;
 	private String loginRequestData;
+	private String usernameParameter;
+	private String passwordParameter;
+	private List<String> httpSessionTokens;
+	private SeleniumDriver seleniumDriver;
 
 	public static Builder builder() {
 		return new Builder();
@@ -82,6 +93,22 @@ public final class AuthenticationInfo {
 		return loginRequestData;
 	}
 	
+	public String getUsernameParameter() {
+		return usernameParameter;
+	}
+	
+	public String getPasswordParameter() {
+		return passwordParameter;
+	}
+	
+	public List<String> getHttpSessionTokens() {
+		return httpSessionTokens;
+	}
+	
+	public SeleniumDriver getSeleniumDriver() {
+		return seleniumDriver;
+	}
+	
 	public static class Builder {
 		
 		private AuthenticationType type;
@@ -95,6 +122,10 @@ public final class AuthenticationInfo {
 		private String[] protectedPages;
 		private String protectedPagesSeparatedByComma;
 		private String loginRequestData = DEFAULT_LOGIN_REQUEST_DATA;
+		private String usernameParameter = DEFAULT_USERNAME_PARAMETER;
+		private String passwordParameter = DEFAULT_PASSWORD_PARAMETER;
+		private List<String> httpSessionTokens = new ArrayList<>();
+		private SeleniumDriver seleniumDriver = DEFAULT_SELENIUM_DRIVER;
 		
 		/**
 		 * Builds an {@code AuthenticationInfo} instance with the minimum information required for CAS authentication.
@@ -134,13 +165,46 @@ public final class AuthenticationInfo {
 		}
 		
 		/**
+		 * Builds an {@code AuthenticationInfo} instance for form authentication.
+		 * 
+		 * @param loginUrl the login URL (i.e. {@code http://myapp.com/login}).
+		 * @param username the username that will be authenticated.
+		 * @param password the user's password.
+		 * @return the built {@link AuthenticationInfo} instance.
+		 */
+		public AuthenticationInfo buildFormAuthenticationInfo(String loginUrl, String usernameParameter, String username, 
+				String passwordParameter, String password) {
+			return type(AuthenticationType.FORM)
+					.loginUrl(loginUrl)
+					.usernameParameter(usernameParameter)
+					.username(username)
+					.passwordParameter(passwordParameter)
+					.password(password)
+					.loginRequestData()
+					.build();
+		}
+		
+		/**
 		 * Sets the {@link AuthenticationType}.
 		 * 
-		 * @param type the {@link AuthenticationType} ({@code CAS} or {@code FORM}).
+		 * @param type the {@link AuthenticationType} ({@code CAS}, {@code FORM} or {@code SELENIUM}).
 		 * @return this {@code Builder} instance.
 		 */
 		public Builder type(AuthenticationType type) {
 			this.type = type;
+			return this;
+		}
+		
+		/**
+		 * Sets the {@link AuthenticationType}.
+		 * 
+		 * @param type the {@link AuthenticationType} as a string ({@code CAS}, {@code FORM} or {@code SELENIUM}, case-insensitive).
+		 * @return this {@code Builder} instance.
+		 */
+		public Builder type(String type) {
+			if (type != null) {
+				this.type = AuthenticationType.valueOf(type.toUpperCase());
+			}
 			return this;
 		}
 		
@@ -267,6 +331,89 @@ public final class AuthenticationInfo {
 		}
 		
 		/**
+		 * Builds the login request data based on the {@code usernameParameter} 
+		 * and {@code passwordParameter} current values.
+		 * 
+		 * @return this {@code Builder} instance.
+		 */
+		public Builder loginRequestData() {
+			this.loginRequestData = usernameParameter + "={%username%}&" + passwordParameter + "={%password%}";
+			return this;
+		}
+		
+		/**
+		 * Sets the username parameter name.
+		 * 
+		 * @param usernameParameter the username parameter that holds the username (default: {@code username}).
+		 * @return this {@code Builder} instance.
+		 */
+		public Builder usernameParameter(String usernameParameter) {
+			this.usernameParameter = usernameParameter;
+			return this;
+		}
+		
+		/**
+		 * Sets the password parameter name.
+		 * 
+		 * @param passwordParameter the password parameter that holds the password (default: {@code password}).
+		 * @return this {@code Builder} instance.
+		 */
+		public Builder passwordParameter(String passwordParameter) {
+			this.passwordParameter = passwordParameter;
+			return this;
+		}
+		
+		/**
+		 * Includes additional HTTP session tokens to ZAP.  
+		 * 
+		 * @param httpSessionTokens the session tokens to be added to ZAP.
+		 * @return this {@code Builder} instance.
+		 */
+		public Builder httpSessionTokens(String... httpSessionTokens) {
+			if (httpSessionTokens != null) {
+				this.httpSessionTokens = Arrays.asList(httpSessionTokens);
+			}
+			return this;
+		}
+		
+		/**
+		 * Includes additional HTTP session tokens to ZAP.  
+		 * 
+		 * @param httpSessionTokens the session tokens to be added to ZAP.
+		 * @return this {@code Builder} instance.
+		 */
+		public Builder httpSessionTokens(List<String> httpSessionTokens) {
+			if (httpSessionTokens != null) {
+				this.httpSessionTokens = new ArrayList<>(httpSessionTokens);
+			}
+			return this;
+		}
+		
+		/**
+		 * Sets the Selenium web driver that will be used to perform authentication.
+		 * 
+		 * @param seleniumDriver the Selenium web driver to be used during authentication. 
+		 * @return this {@code Builder} instance.
+		 */
+		public Builder seleniumDriver(SeleniumDriver seleniumDriver) {
+			this.seleniumDriver = seleniumDriver;
+			return this;
+		}
+		
+		/**
+		 * Sets the Selenium web driver that will be used to perform authentication.
+		 * 
+		 * @param seleniumDriver the Selenium web driver as a string (case-insensitive) to be used during authentication. 
+		 * @return this {@code Builder} instance.
+		 */
+		public Builder seleniumDriver(String seleniumDriver) {
+			if (seleniumDriver != null) {
+				this.seleniumDriver = SeleniumDriver.valueOf(seleniumDriver.toUpperCase());
+			}
+			return this;
+		}
+		
+		/**
 		 * Validates and builds an {@link AuthenticationInfo} instance based on the builder parameters.
 		 * 
 		 * @return a {@link AuthenticationInfo} instance.
@@ -291,6 +438,10 @@ public final class AuthenticationInfo {
 		this.protectedPages                 = builder.protectedPages;
 		this.protectedPagesSeparatedByComma = builder.protectedPagesSeparatedByComma;
 		this.loginRequestData               = builder.loginRequestData;
+		this.usernameParameter              = builder.usernameParameter;
+		this.passwordParameter              = builder.passwordParameter;
+		this.httpSessionTokens              = builder.httpSessionTokens;
+		this.seleniumDriver                 = builder.seleniumDriver;
 	}
 	
 	@Override
@@ -306,6 +457,10 @@ public final class AuthenticationInfo {
 				.append("excludeFromScan", excludeFromScan)
 				.append("protectedPages", protectedPages)
 				.append("loginRequestData", loginRequestData)
+				.append("usernameParameter", usernameParameter)
+				.append("passwordParameter", passwordParameter)
+				.append("httpSessionTokens", httpSessionTokens)
+				.append("seleniumDriver", seleniumDriver)
 				.toString();
 	}
 

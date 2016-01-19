@@ -39,8 +39,8 @@ public final class AuthenticationInfoValidator {
 			case CAS:
 				validateCasAuthenticationInfo(info, warnings);
 				break;
+			case SELENIUM:
 		}
-		validateReauthenticationConfiguration(info, warnings);
 		
 		if (warnings.isEmpty()) {
 			LOGGER.info("The authentication information provided was successfully validated.");
@@ -53,14 +53,6 @@ public final class AuthenticationInfoValidator {
 		LOGGER.info("--- Finished validating authentication information ---\n");
 	}
 
-	private static void validateReauthenticationConfiguration(AuthenticationInfo info, List<String> warnings) {
-		if (info.getLoggedInRegex() == null && info.getLoggedOutRegex() == null && 
-				(info.getExcludeFromScan() == null || info.getExcludeFromScan().length == 0)) {
-			warnings.add("None of the fields 'loggedInRegex', 'loggedOutRegex' and 'excludeFromScan' were provided. "
-					+ "Reauthentication will not be possible and there might be a chance that the Spider will log itself out during the scan.");
-		}
-	}
-	
 	private static void checkRequiredField(Object field, String fieldName) {
 		if (field == null) {
 			String message = "The field '" + fieldName + "' is required when working with authentication.";
@@ -70,17 +62,27 @@ public final class AuthenticationInfoValidator {
 	}
 	
 	private static void validateFormAuthenticationInfo(AuthenticationInfo info, List<String> warnings) {
+		validateReauthenticationConfiguration(info, warnings);
 		if (info.getProtectedPages() != null && info.getProtectedPages().length > 0) {
 			warnings.add("The 'protectedPages' field is not used for form based authentication and is necessary only for CAS authentication.");
 		}
 	}
 
 	private static void validateCasAuthenticationInfo(AuthenticationInfo info, List<String> warnings) {
+		validateReauthenticationConfiguration(info, warnings);
 		if (info.getProtectedPages() == null || info.getProtectedPages().length == 0) {
 			String message = "The field 'protectedPages' is required for CAS authentication. "
 					+ "A protected page of each context must be accessed prior to scanning to avoid later redirections.";
 			LOGGER.error(message);
 			throw new AuthenticationInfoValidationException(message);
+		}
+	}
+	
+	private static void validateReauthenticationConfiguration(AuthenticationInfo info, List<String> warnings) {
+		if (info.getLoggedInRegex() == null && info.getLoggedOutRegex() == null && 
+				(info.getExcludeFromScan() == null || info.getExcludeFromScan().length == 0)) {
+			warnings.add("None of the fields 'loggedInRegex', 'loggedOutRegex' and 'excludeFromScan' were provided. "
+					+ "Reauthentication will not be possible and there might be a chance that the Spider will log itself out during the scan.");
 		}
 	}
 	

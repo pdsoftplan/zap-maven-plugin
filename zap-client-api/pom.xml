@@ -10,7 +10,7 @@
 	</parent>
 
 	<artifactId>zap-client-api</artifactId>
-	
+
 	<name>ZAP Client API</name>
 	<description>Java client API for the OWASP Zed Attack Proxy (ZAP), built on top of the official ZAP Java API</description>
 	<url>https://github.com/pdsoftplan/zap-maven-plugin</url>
@@ -27,7 +27,7 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
-	
+
 	<developers>
 		<developer>
 			<id>tfcporciuncula</id>
@@ -87,6 +87,10 @@
 		<dependency>
 			<groupId>org.jopendocument</groupId>
 			<artifactId>jdom</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>br.com.softplan.security.zap</groupId>

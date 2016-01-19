@@ -14,7 +14,7 @@ import br.com.softplan.security.zap.commons.ZapInfo;
 import br.com.softplan.security.zap.zaproxy.clientapi.core.ClientApi;
 
 /**
- * The main client for calling ZAP analysis.
+ * The main client for starting a ZAP analysis.
  * 
  * @author pdsec
  */
@@ -24,6 +24,7 @@ public class ZapClient {
 	private ClientApi api;
 	
 	private AuthenticationHandler authenticationHandler;
+	private SessionManager sessionManager;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ZapClient.class);
 
@@ -35,6 +36,7 @@ public class ZapClient {
 	public ZapClient(ZapInfo zapInfo) {
 		this.apiKey = zapInfo.getApiKey();
 		this.api = new ClientApi(zapInfo.getHost(), zapInfo.getPort());
+		this.sessionManager = new SessionManager();
 	}
 
 	/**
@@ -49,7 +51,13 @@ public class ZapClient {
 	}
 
 	public ZapReport analyze(AnalysisInfo analysisInfo) {
-		setupAuthentication(analysisInfo);
+		if (analysisInfo.shouldStartNewSession()) {
+			sessionManager.createNewSession(api, apiKey);
+		}
+		
+		if (authenticationHandler != null) {
+			authenticationHandler.handleAuthentication(analysisInfo.getTargetUrl());
+		}
 
 		LOGGER.info("--- Starting analysis ---");
 		
@@ -61,10 +69,4 @@ public class ZapClient {
 		return zapReport;
 	}
 
-	private void setupAuthentication(AnalysisInfo analysisInfo) {
-		if (authenticationHandler != null) {
-			authenticationHandler.handleAuthentication(analysisInfo.getTargetUrl());
-		}
-	}
-	
 }

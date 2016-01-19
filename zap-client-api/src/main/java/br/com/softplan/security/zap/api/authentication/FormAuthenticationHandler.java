@@ -6,6 +6,7 @@ import java.net.URLEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import br.com.softplan.security.zap.api.ZapHelper;
 import br.com.softplan.security.zap.api.exception.ZapClientException;
 import br.com.softplan.security.zap.api.model.AuthenticationInfo;
 import br.com.softplan.security.zap.commons.ZapInfo;
@@ -49,7 +50,7 @@ public class FormAuthenticationHandler extends AbstractAuthenticationHandler {
 			LOGGER.debug("Setting form authentication method with params: {}", authParams);
 			ApiResponse response = getApi().authentication.setAuthenticationMethod(
 							getApiKey(), ZAP_DEFAULT_CONTEXT_ID, FORM_AUTHENTICATION_TYPE, authParams);
-			validateResponse(response, "Set form authentication method.");
+			ZapHelper.validateResponse(response, "Set form authentication method.");
 		} catch (ClientApiException | UnsupportedEncodingException e) {
 			LOGGER.error("Error setting up form authentication method.", e);
 			throw new ZapClientException(e);

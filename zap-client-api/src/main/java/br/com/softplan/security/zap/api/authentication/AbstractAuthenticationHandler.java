@@ -7,11 +7,11 @@ import java.nio.charset.StandardCharsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import br.com.softplan.security.zap.api.ZapHelper;
 import br.com.softplan.security.zap.api.exception.ZapClientException;
 import br.com.softplan.security.zap.api.model.AuthenticationInfo;
 import br.com.softplan.security.zap.commons.ZapInfo;
 import br.com.softplan.security.zap.zaproxy.clientapi.core.ApiResponse;
-import br.com.softplan.security.zap.zaproxy.clientapi.core.ApiResponseElement;
 import br.com.softplan.security.zap.zaproxy.clientapi.core.ClientApi;
 import br.com.softplan.security.zap.zaproxy.clientapi.core.ClientApiException;
 
@@ -28,11 +28,13 @@ public abstract class AbstractAuthenticationHandler implements AuthenticationHan
 	
 	protected static final String UTF_8 = StandardCharsets.UTF_8.name();
 	
-	protected static final String ZAP_SUCCESS_RESPONSE = "OK";
 	protected static final String ZAP_DEFAULT_CONTEXT_NAME = "Default Context";
 	protected static final String ZAP_DEFAULT_CONTEXT_ID = "1";
+	protected static final String ZAP_DEFAULT_SESSION_NAME = "Session 0";
 	
 	private ClientApi api;
+	
+	private ZapInfo zapInfo;
 	
 	private String apiKey;
 	
@@ -42,6 +44,7 @@ public abstract class AbstractAuthenticationHandler implements AuthenticationHan
 	
 	protected AbstractAuthenticationHandler(ClientApi api, ZapInfo zapInfo, AuthenticationInfo authenticationInfo) {
 		this.api = api;
+		this.zapInfo = zapInfo;
 		this.apiKey = zapInfo.getApiKey();
 		this.authenticationInfo = authenticationInfo;
 	}
@@ -50,6 +53,10 @@ public abstract class AbstractAuthenticationHandler implements AuthenticationHan
 		return api;
 	}
 
+	protected ZapInfo getZapInfo() {
+		return zapInfo;
+	}
+	
 	protected String getApiKey() {
 		return apiKey;
 	}
@@ -76,7 +83,7 @@ public abstract class AbstractAuthenticationHandler implements AuthenticationHan
 		try {
 			ApiResponse response = api.context.includeInContext(
 					apiKey, ZAP_DEFAULT_CONTEXT_NAME, "\\Q" + targetUrl + "\\E.*");
-			validateResponse(response, "Include target in context.");
+			ZapHelper.validateResponse(response, "Include target in context.");
 			
 		} catch (ClientApiException e) {
 			LOGGER.error("Error including target in context.", e);
@@ -94,10 +101,10 @@ public abstract class AbstractAuthenticationHandler implements AuthenticationHan
 					LOGGER.debug("Excluding URL '{}' from scanners.", url);
 					
 					ApiResponse responseFromSpider = api.spider.excludeFromScan(apiKey, "\\Q" + url + "\\E");
-					validateResponse(responseFromSpider, "Exclude '" + url + "' from Spider.");
+					ZapHelper.validateResponse(responseFromSpider, "Exclude '" + url + "' from Spider.");
 					
 					ApiResponse responseFromAScan = api.ascan.excludeFromScan(apiKey, "\\Q" + url + "\\E");
-					validateResponse(responseFromAScan, "Exclude '" + url + "' from Active Scan.");
+					ZapHelper.validateResponse(responseFromAScan, "Exclude '" + url + "' from Active Scan.");
 				}
 			}
 		} catch (ClientApiException e) {
@@ -115,14 +122,14 @@ public abstract class AbstractAuthenticationHandler implements AuthenticationHan
 				
 				ApiResponse response = api.authentication.setLoggedInIndicator(
 						apiKey, ZAP_DEFAULT_CONTEXT_ID, loggedInRegex);
-				validateResponse(response, "Set logged in regex");
+				ZapHelper.validateResponse(response, "Set logged in regex");
 			}
 			if (loggedOutRegex != null) {
 				LOGGER.debug("Setting '{}' as the logged out regex.", loggedOutRegex);
 				
 				ApiResponse response = api.authentication.setLoggedOutIndicator(
 						apiKey, ZAP_DEFAULT_CONTEXT_ID, loggedOutRegex);
-				validateResponse(response, "Set logged out regex");
+				ZapHelper.validateResponse(response, "Set logged out regex");
 			}
 		} catch (ClientApiException e) {
 			LOGGER.error("Error setting up logged in and/or logged out regex for authentication.", e);
@@ -136,11 +143,11 @@ public abstract class AbstractAuthenticationHandler implements AuthenticationHan
 		try {
 			ApiResponse responseFromCreating = api.users.newUser(
 					apiKey, ZAP_DEFAULT_CONTEXT_ID, authenticationInfo.getUsername());
-			userId = extractResponse(responseFromCreating);
+			userId = ZapHelper.extractResponse(responseFromCreating);
 			
 			ApiResponse responseFromEnabling = api.users.setUserEnabled(
 					apiKey, ZAP_DEFAULT_CONTEXT_ID, userId, Boolean.TRUE.toString());
-			validateResponse(responseFromEnabling, "Enable the user");
+			ZapHelper.validateResponse(responseFromEnabling, "Enable the user");
 		} catch (ClientApiException e) {
 			LOGGER.error("Error creating and enabling user for authentication.", e);
 			throw new ZapClientException(e);
@@ -158,7 +165,7 @@ public abstract class AbstractAuthenticationHandler implements AuthenticationHan
 			String credentials = "username=" + encodedUsername + "&password=" + encodedPassword;
 			ApiResponse responseFromSettingCredentials = api.users.setAuthenticationCredentials(
 					apiKey, ZAP_DEFAULT_CONTEXT_ID, userId, credentials);
-			validateResponse(responseFromSettingCredentials, "Set the user's credentials");
+			ZapHelper.validateResponse(responseFromSettingCredentials, "Set the user's credentials");
 		} catch (ClientApiException | UnsupportedEncodingException e) {
 			LOGGER.error("Error setting up user's credential for authentication.", e);
 			throw new ZapClientException(e);
@@ -171,10 +178,10 @@ public abstract class AbstractAuthenticationHandler implements AuthenticationHan
 		try {
 			ApiResponse responseFromSettingForcedUser = api.forcedUser.setForcedUser(
 					apiKey, ZAP_DEFAULT_CONTEXT_ID, userId);
-			validateResponse(responseFromSettingForcedUser, "Set forced user.");
+			ZapHelper.validateResponse(responseFromSettingForcedUser, "Set forced user.");
 			
 			ApiResponse responseFromEnabling = api.forcedUser.setForcedUserModeEnabled(apiKey, true);
-			validateResponse(responseFromEnabling, "Enable Forced User Mode.");
+			ZapHelper.validateResponse(responseFromEnabling, "Enable Forced User Mode.");
 		} catch (ClientApiException e) {
 			LOGGER.error("Error setting up Forced User Mode.", e);
 			throw new ZapClientException(e);
@@ -185,26 +192,38 @@ public abstract class AbstractAuthenticationHandler implements AuthenticationHan
 		LOGGER.debug("Disabling Forced User Mode.");
 		
 		try {
-			ApiResponse responseFromEnabling = api.forcedUser.setForcedUserModeEnabled(apiKey, false);
-			validateResponse(responseFromEnabling, "Disable Forced User Mode.");
+			ApiResponse response = api.forcedUser.setForcedUserModeEnabled(apiKey, false);
+			ZapHelper.validateResponse(response, "Disable Forced User Mode.");
 		} catch (ClientApiException e) {
 			LOGGER.error("Error disabling Forced User Mode.", e);
 			throw new ZapClientException(e);
 		}
 	}
 	
-	protected static void validateResponse(ApiResponse response, String operationDescription) {
-		String responseValue = extractResponse(response);
-		if (!responseValue.equals(ZAP_SUCCESS_RESPONSE)) {
-			String message = "ZAP API did not respond '" + ZAP_SUCCESS_RESPONSE + "' during the following operation: "
-					 + operationDescription + ". Actual response: " + responseValue;
-			LOGGER.error(message);
-			throw new ZapClientException(message);
+	protected void addHttpSessionTokens(String site) {
+		LOGGER.debug("Adding session tokens: {}.", authenticationInfo.getHttpSessionTokens());
+		
+		try {
+			for (String sessionToken : authenticationInfo.getHttpSessionTokens()) {
+				ApiResponse response = api.httpSessions.addSessionToken(apiKey, site, sessionToken);
+				ZapHelper.validateResponse(response, "Add session tokens.");
+			}
+		} catch (ClientApiException e) {
+			LOGGER.error("Error adding session tokens.", e);
+			throw new ZapClientException(e);
 		}
 	}
 	
-	protected static String extractResponse(ApiResponse response) {
-		return ((ApiResponseElement) response).getValue();
+	protected void setHttpSessionAsActive(String site) {
+		LOGGER.debug("Setting session as active.");
+		
+		try {
+			ApiResponse response = api.httpSessions.setActiveSession(apiKey, site, ZAP_DEFAULT_SESSION_NAME);
+			ZapHelper.validateResponse(response, "Set session as active.");
+		} catch (ClientApiException e) {
+			LOGGER.error("Error setting session as active.", e);
+			throw new ZapClientException(e);
+		}
 	}
 	
 }

@@ -1,10 +1,13 @@
 package br.com.softplan.security.zap.api.authentication;
 
-import static br.com.softplan.security.zap.api.authentication.AbstractAuthenticationHandler.*;
-import static org.testng.Assert.*;
+import static br.com.softplan.security.zap.api.authentication.AbstractAuthenticationHandler.ZAP_DEFAULT_CONTEXT_ID;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 import org.testng.annotations.Test;
 
+import br.com.softplan.security.zap.api.ZapHelper;
 import br.com.softplan.security.zap.api.exception.ZapClientException;
 import br.com.softplan.security.zap.api.model.AuthenticationInfo;
 import br.com.softplan.security.zap.api.util.BaseIT;
@@ -143,20 +146,20 @@ public class AbstractAuthenticationHandlerIT extends BaseIT {
 	@Test
 	public void validateResponseTestWithSuccessResponse() {
 		ApiResponse response = new ApiResponseElement("test", "OK");
-		AbstractAuthenticationHandler.validateResponse(response, "test");
+		ZapHelper.validateResponse(response, "test");
 	}
 	
 	@Test(expectedExceptions=ZapClientException.class)
 	public void validateResponseTestWithFailureResponse() {
 		ApiResponse response = new ApiResponseElement("test", "not OK");
-		AbstractAuthenticationHandler.validateResponse(response, "test");
+		ZapHelper.validateResponse(response, "test");
 	}
 	
 	@Test
 	public void extractResponseTest() {
 		String value = "value";
 		ApiResponse response = new ApiResponseElement("name", value);
-		assertEquals(value, AbstractAuthenticationHandler.extractResponse(response));
+		assertEquals(value, ZapHelper.extractResponse(response));
 	}
 	
 }

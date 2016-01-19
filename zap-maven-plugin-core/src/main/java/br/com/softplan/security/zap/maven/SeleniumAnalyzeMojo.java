@@ -27,7 +27,7 @@ import br.com.softplan.security.zap.commons.boot.Zap;
 public class SeleniumAnalyzeMojo extends ZapMojo {
 	
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		getLog().info("Starting ZAP analysis at target: " + super.getTarget());
+		getLog().info("Starting ZAP analysis at target: " + super.getTargetUrl());
 		
 		ZapInfo zapInfo = buildZapInfo();
 		AuthenticationInfo authenticationInfo = buildAuthenticationInfo();

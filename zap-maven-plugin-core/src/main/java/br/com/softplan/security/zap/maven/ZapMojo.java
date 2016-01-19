@@ -8,7 +8,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import br.com.softplan.security.zap.api.model.AnalysisInfo;
 import br.com.softplan.security.zap.api.model.AnalysisType;
 import br.com.softplan.security.zap.api.model.AuthenticationInfo;
-import br.com.softplan.security.zap.api.model.AuthenticationType;
+import br.com.softplan.security.zap.api.model.SeleniumDriver;
 import br.com.softplan.security.zap.api.report.ZapReport;
 import br.com.softplan.security.zap.api.report.ZapReportUtil;
 import br.com.softplan.security.zap.commons.ZapInfo;
@@ -21,9 +21,13 @@ import br.com.softplan.security.zap.commons.ZapInfo;
 public abstract class ZapMojo extends AbstractMojo {
 	
 	// Analysis
-	@Parameter(required=true) private String target;
-	@Parameter(defaultValue="480") private int analysisTimeoutInMinutes;
-	@Parameter private boolean shouldRunAjaxSpider;
+	@Parameter(required=true) private String targetUrl;
+	@Parameter private String spiderStartingPointUrl;
+	@Parameter private String activeScanStartingPointUrl;
+	@Parameter(defaultValue="480")   private int analysisTimeoutInMinutes;
+	@Parameter(defaultValue="false") private boolean shouldRunAjaxSpider;
+	@Parameter(defaultValue="false") private boolean shouldRunPassiveScanOnly;
+	@Parameter(defaultValue="true")  private boolean shouldStartNewSession;
 	
 	// ZAP
 	@Parameter(required=true) private Integer zapPort;
@@ -48,9 +52,12 @@ public abstract class ZapMojo extends AbstractMojo {
 	// CAS
 	@Parameter private String[] protectedPages;
 
-	// Form
+	// Form and Selenium
 	@Parameter(defaultValue="username") private String usernameParameter;
 	@Parameter(defaultValue="password") private String passwordParameter;
+	
+	@Parameter private String[] httpSessionTokens;
+	@Parameter(defaultValue="firefox") private String seleniumDriver;
 	
 	protected ZapInfo buildZapInfo() {
 		return ZapInfo.builder()
@@ -69,29 +76,47 @@ public abstract class ZapMojo extends AbstractMojo {
 			return null;
 		}
 		return AuthenticationInfo.builder()
-				.type            (AuthenticationType.valueOf(authenticationType.toUpperCase()))
-				.loginUrl        (loginUrl)
-				.username        (username)
-				.password        (password)
-				.extraPostData   (extraPostData)
-				.loggedInRegex   (loggedInRegex)
-				.loggedOutRegex  (loggedOutRegex)
-				.excludeFromScan (excludeFromScan)
-				.protectedPages  (protectedPages)
-				.loginRequestData(usernameParameter + "={%username%}&" + passwordParameter + "={%password%}")
+				.type             (authenticationType)
+				.loginUrl         (loginUrl)
+				.username         (username)
+				.password         (password)
+				.extraPostData    (extraPostData)
+				.loggedInRegex    (loggedInRegex)
+				.loggedOutRegex   (loggedOutRegex)
+				.excludeFromScan  (excludeFromScan)
+				.protectedPages   (protectedPages)
+				.usernameParameter(usernameParameter)
+				.passwordParameter(passwordParameter)
+				.loginRequestData()
+				.httpSessionTokens(httpSessionTokens)
+				.seleniumDriver(SeleniumDriver.valueOf(seleniumDriver.toUpperCase()))
 				.build();
 	}
 	
 	protected AnalysisInfo buildAnalysisInfo() {
 		AnalysisType analysisType = AnalysisType.WITH_SPIDER;
-		if (shouldRunAjaxSpider) {
-			analysisType = AnalysisType.WITH_AJAX_SPIDER;
+		if (shouldRunAjaxSpider && shouldRunPassiveScanOnly) {
+			analysisType = AnalysisType.SPIDER_AND_AJAX_SPIDER_ONLY;
+		} else {
+			if (shouldRunAjaxSpider) {
+				analysisType = AnalysisType.WITH_AJAX_SPIDER;
+			}
+			if (shouldRunPassiveScanOnly) {
+				analysisType = AnalysisType.SPIDER_ONLY;
+			}
 		}
-		return new AnalysisInfo(target, analysisTimeoutInMinutes, analysisType);
+		return buildAnalysisInfo(analysisType);
 	}
 	
 	protected AnalysisInfo buildAnalysisInfo(AnalysisType analysisType) {
-		return new AnalysisInfo(target, analysisTimeoutInMinutes, analysisType);
+		return AnalysisInfo.builder()
+				.targetUrl(targetUrl)
+				.spiderStartingPointUrl(spiderStartingPointUrl)
+				.activeScanStartingPointUrl(activeScanStartingPointUrl)
+				.analysisTimeoutInMinutes(analysisTimeoutInMinutes)
+				.analysisType(analysisType)
+				.shouldStartNewSession(shouldStartNewSession)
+				.build();
 	}
 	
 	protected void saveReport(ZapReport zapReport) {
@@ -103,8 +128,8 @@ public abstract class ZapMojo extends AbstractMojo {
 		}
 	}
 	
-	protected String getTarget() {
-		return this.target;
+	protected String getTargetUrl() {
+		return this.targetUrl;
 	}
 	
 }
