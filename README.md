@@ -8,7 +8,7 @@
 This plugin makes it easier to integrate [OWASP Zed Attack Proxy (ZAP)](https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project) security tests with the application development and build process for Maven users. With this plugin, you can:
 
 - Run ZAP analysis during the build of your application;
-- Run authenticated analysis on [CAS](http://jasig.github.io/cas/) applications;
+- Run authenticated analysis on [CAS](http://jasig.github.io/cas/) applications and on many other applications with complex authentication strategies;
 - Use your Selenium integration tests navigation to feed ZAP;
 - Easily run ZAP analysis during development.
 
@@ -52,7 +52,7 @@ Generally, the plugin configuration will follow the format below:
 
 The main goal provided is *analyze*, responsible to execute a ZAP analysis according to the configuration parameters. However, the plugin also provides other goals for more specific situations. The list of available goals is presented bellow:
 
-- *analyze*: performs a complete analysis running the [Spider](https://github.com/zaproxy/zap-core-help/wiki/HelpStartConceptsSpider) before the [Active Scan](https://github.com/zaproxy/zap-core-help/wiki/HelpStartConceptsAscan) and starting ZAP automatically if necessary (and closing it after the analysis).
+- *analyze*: performs a complete analysis running (by default) the [Spider](https://github.com/zaproxy/zap-core-help/wiki/HelpStartConceptsSpider) before the [Active Scan](https://github.com/zaproxy/zap-core-help/wiki/HelpStartConceptsAscan) and starting ZAP automatically if necessary (and closing it after the analysis).
 - *startZap*: simply starts ZAP (via local installation or Docker).
 - *seleniumAnalyze*: assumes ZAP is already executing and simply runs the Active Scan, closing ZAP after the analysis. This goal is useful when there are Selenium integration tests that are executed with a proxy to ZAP and the navigation done by the tests should be used instead of the Spider. More on that at [Selenium Integration](#selenium-integration).
 
@@ -60,20 +60,21 @@ The goals that run analysis save the generated reports in the end of the plugin 
 
 ## Configuration Parameters
 
-Analysis parameters:
+**Analysis parameters:**
 
 Parameter | Description | Required? | Default
 --- | --- | --- | ---
 targetUrl                      | URL of the application that will be scanned  | Yes | -
-spiderStartingPointUrl         | Starting point URL for the Spider (and AJAX Spider, in case it will run) | No | *targetUrl*
+spiderStartingPointUrl         | Starting point URL for the Spider (and AJAX Spider, in case it runs) | No | *targetUrl*
 activeScanStartingPointUrl     | Starting point URL for the Active Scan       | No  | *targetUrl*
 analysisTimeoutInMinutes       | Analysis timeout in minutes                  | No  | 480
 shouldRunAjaxSpider            | Indicates whether ZAP should execute the [AJAX Spider](https://github.com/zaproxy/zap-core-help/wiki/HelpAddonsSpiderAjaxConcepts) after the default Spider (it can improve the scan on applications that rely on AJAX)     | No  | false
 shouldRunPassiveScanOnly       | In case it's true, the Active Scan will not be executed | No | false
 shouldStartNewSession          | Indicates whether a new session should be started on ZAP before the analysis | No | true
+
 > If both *spiderStartingPoint* and *activeScanStartingPoint* are provided, *targetUrl* will be ignored. These options are useful when you want to spider through the whole application, but want to run the Active Scan for only a portion of it. 
 
-ZAP related parameters:
+**ZAP related parameters:**
 
 Parameter | Description | Required? | Default
 --- | --- | --- | ---
@@ -92,7 +93,7 @@ reportPath  | Absolute or relative path where the generated reports will be save
 > ```
 > These options make ZAP start without a GUI, with its API key disabled, able to report errors details via API, and able to be accessed remotely. Besides that, it makes sure ZAP will run on the port specified by the *port* option. These options can be overridden by the *zapOptions* parameter.
 
-Authentication parameters:
+**Authentication parameters:**
 
 Parameter | Description | Required?
 --- | --- | ---
@@ -103,16 +104,9 @@ password           | Password used in the authentication                        
 extraPostData      | Used to define any extra parameters that must be passed in the authentication request (e.g. *domain=someDomain&param=value*) | No
 loggedInRegex      | Regex that identifies a pattern in authenticated responses (needed to allow re-authentication)     | No
 loggedOutRegex     | Regex that identifies a pattern in non-authenticated responses (needed to allow re-authentication) | No
-excludeFromScan    | Define the URLs that will be excluded from the scan | No
+excludeFromScan    | Define the URLs regexs that will be excluded from the scan | No
 
-Form only authentication parameters:
-
-Parameter | Description | Required? | Default
---- | --- | --- | ---
-usernameParameter  | Name of the request parameter that holds the username | No | username
-passwordParameter  | Name of the request parameter that holds the password | No | password
-
-CAS only authentication parameter:
+**CAS only authentication parameter:**
 
 Parameter | Description | Required?
 --- | --- | ---
@@ -120,12 +114,20 @@ protectedPages | Define the URL of a protected page of the application that will
 
 > As it was stated, the option *protectedPage* should have as value the URL of a protected page of the application that will be scanned. For CAS authentication, the login is done directly at the CAS server. Thus, in the first access to the application there will be a redirect to the server, that ends up redirecting the user back to the protected page, since the user is already authenticated. ZAP doesn't support this circular redirect, and because of that the application needs to be accessed at least once before the scan is started. This option defines the URL of a protected page that will be accessed after the authentication and before the scan to make sure the circular redirect won't happen during ZAP's analysis.
 
-Selenium only authentication parameters:
+**Form and Selenium only authentication parameters:**
+
+Parameter | Description | Required? | Default
+--- | --- | --- | ---
+usernameParameter  | Name of the request parameter that holds the username | No | username
+passwordParameter  | Name of the request parameter that holds the password | No | password
+
+**Selenium only authentication parameters:**
 
 Parameter | Description | Required? | Default
 --- | --- | --- | ---
 sessionTokens  | Any additional session tokens that should be added to ZAP prior authentication | No | -
 seleniumDriver | The web driver that will be used to perform authentication: 'html_unit', 'firefox' or 'chrome' | No | firefox
+
 > It's important to realize that the `HtmlUnitDriver` lacks complete support for JavaScript. Therefore, it might not always work properly.
 
 Notice that the parameters *excludeFromScan*, *protectedPages* and *sessionTokens* accept multiple values, like in the example below:
