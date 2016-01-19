@@ -73,7 +73,7 @@ shouldRunAjaxSpider            | Indicates whether ZAP should execute the [AJAX 
 shouldRunPassiveScanOnly       | In case it's true, the Active Scan will not be executed | No | false
 shouldStartNewSession          | Indicates whether a new session should be started on ZAP before the analysis | No | true
 
-> If both *spiderStartingPoint* and *activeScanStartingPoint* are provided, *targetUrl* will be ignored. These options are useful when you want to spider through the whole application, but want to run the Active Scan for only a portion of it. 
+> If both *spiderStartingPoint* and *activeScanStartingPoint* are provided, *targetUrl* will be ignored. These options are useful when you want to spider through the whole application, but want to run the Active Scan for only a portion of it. Normally, *activeScanStartingPoint* will be narrower than *spiderStartingPoint*.
 
 **ZAP related parameters:**
 
