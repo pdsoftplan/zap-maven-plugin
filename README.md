@@ -64,7 +64,8 @@ Analysis parameters:
 
 Parameter | Description | Required? | Default
 --- | --- | --- | ---
-target                   | URL of the application that will be scanned  | Yes | -
+targetUrl                   | URL of the application that will be scanned  | Yes | -
+
 analysisTimeoutInMinutes | Analysis timeout in minutes                  | No  | 480
 shouldRunAjaxSpider      | Indicates whether ZAP should execute the [AJAX Spider](https://github.com/zaproxy/zap-core-help/wiki/HelpAddonsSpiderAjaxConcepts) after the default Spider (it can improve the scan on applications that rely on AJAX)     | No  | false
 shouldStartNewSession    | Indicates whether a new session should be started on ZAP before the analysis | No | true
@@ -142,7 +143,7 @@ For this to work, ZAP must already be running.
     <configuration>
         <zapHost>localhost</zapHost>
         <zapPort>8080</zapPort>
-        <target>http://localhost:8090/testwebapp</target>
+        <targetUrl>http://localhost:8090/testwebapp</targetUrl>
     </configuration>
     <executions>
         <execution>
@@ -164,7 +165,7 @@ For ZAP to be automatically started, the option *zapPath* must be provided with 
 	<version>${zap.maven.plugin.version}</version>
 	<configuration>
 		<zapPort>8080</zapPort>
-		<target>http://localhost:8090/testwebapp</target>
+		<targetUrl>http://localhost:8090/testwebapp</targetUrl>
 		<zapPath>C:\Program Files (x86)\OWASP\Zed Attack Proxy</zapPath>
 	</configuration>
 	<executions>
@@ -189,7 +190,7 @@ If ZAP is not installed, you can still start ZAP with Docker. For this, Docker m
 	<version>${zap.maven.plugin.version}</version>
 	<configuration>
 		<zapPort>8080</zapPort>
-		<target>http://localhost:8090/testwebapp</target>
+		<targetUrl>http://localhost:8090/testwebapp</targetUrl>
 		<shouldRunWithDocker>true</shouldRunWithDocker>
 	</configuration>
 	<executions>
@@ -211,7 +212,7 @@ If ZAP is not installed, you can still start ZAP with Docker. For this, Docker m
 	<configuration>
 		<zapHost>localhost</zapHost>
     	<zapPort>8080</zapPort>
-		<target>http://localhost:8180/bodgeit</target>
+		<targetUrl>http://localhost:8180/bodgeit</targetUrl>
 
 		<authenticationType>form</authenticationType>
 		<username>user</username>
@@ -240,7 +241,7 @@ If ZAP is not installed, you can still start ZAP with Docker. For this, Docker m
 	<configuration>
 		<zapHost>localhost</zapHost>
 		<zapPort>8080</zapPort>
-		<target>https://localhost:8443/myapp</target>
+		<targetUrl>https://localhost:8443/myapp</targetUrl>
 
         <authenticationType>cas</authenticationType>
         <username>user</username>
