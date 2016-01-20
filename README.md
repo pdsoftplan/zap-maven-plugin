@@ -136,11 +136,12 @@ Notice that the parameters *excludeFromScan*, *protectedPages* and *httpSessionT
 
 ```xml
 <excludeFromScan>
-    <!-- It doesn't matter how you name the inner tag, as long as you remain consistent -->
-    <param>http://myapp/logout</param>
-    <param>http://myapp/forbidden</param>
+    <!-- It doesn't matter how you name the inner tag -->
+    <exclude1>http://myapp/logout</exclude1>
+    <exclude2>http://myapp/forbidden</exclude1>
 </excludeFromScan>
 <protectedPages>
+    <!-- And even for only one item, the inner tag is necessary -->
     <protectedPage>http://myapp/protected/index</protectedPage>
 </protectedPages>
 <httpSessionTokens>
