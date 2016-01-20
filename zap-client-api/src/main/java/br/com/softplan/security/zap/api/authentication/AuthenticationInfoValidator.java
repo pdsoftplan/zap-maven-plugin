@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import br.com.softplan.security.zap.api.exception.AuthenticationInfoValidationException;
 import br.com.softplan.security.zap.api.model.AuthenticationInfo;
+import br.com.softplan.security.zap.api.model.AuthenticationType;
 
 /**
  * Class to validate {@link AuthenticationInfo} instances.
@@ -29,10 +30,15 @@ public final class AuthenticationInfoValidator {
 		checkRequiredField(info.getType(), "type");
 		checkRequiredField(info.getUsername(), "username");
 		checkRequiredField(info.getPassword(), "password");
-		checkRequiredField(info.getLoginUrl(), "loginUrl");
+		if (info.getType() != AuthenticationType.HTTP) {
+			checkRequiredField(info.getLoginUrl(), "loginUrl");
+		}
 		
 		List<String> warnings = new ArrayList<>();
 		switch (info.getType()) {
+			case HTTP:
+				validateHttpAuthenticationInfo(info, warnings);
+				break;
 			case FORM:
 				validateFormAuthenticationInfo(info, warnings);
 				break;
@@ -56,6 +62,19 @@ public final class AuthenticationInfoValidator {
 	private static void checkRequiredField(Object field, String fieldName) {
 		if (field == null) {
 			String message = "The field '" + fieldName + "' is required when working with authentication.";
+			LOGGER.error(message);
+			throw new AuthenticationInfoValidationException(message);
+		}
+	}
+	
+	private static void validateHttpAuthenticationInfo(AuthenticationInfo info, List<String> warnings) {
+		if (info.getHostname() == null) {
+			String message = "The field 'hostname' is required for HTTP authentication.";
+			LOGGER.error(message);
+			throw new AuthenticationInfoValidationException(message);
+		}
+		if (info.getRealm() == null) {
+			String message = "The field 'realm' is required for HTTP authentication.";
 			LOGGER.error(message);
 			throw new AuthenticationInfoValidationException(message);
 		}

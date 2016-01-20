@@ -60,6 +60,11 @@ public abstract class ZapMojo extends AbstractMojo {
 	@Parameter private String[] httpSessionTokens;
 	@Parameter(defaultValue="firefox") private String seleniumDriver;
 	
+	// HTTP
+	@Parameter private String hostname;
+	@Parameter private String realm;
+	@Parameter(defaultValue="80") private int port;
+	
 	protected ZapInfo buildZapInfo() {
 		return ZapInfo.builder()
 				.host   (zapHost)
@@ -91,6 +96,9 @@ public abstract class ZapMojo extends AbstractMojo {
 				.loginRequestData()
 				.httpSessionTokens(httpSessionTokens)
 				.seleniumDriver(SeleniumDriver.valueOf(seleniumDriver.toUpperCase()))
+				.hostname(hostname)
+				.realm(realm)
+				.port(port)
 				.build();
 	}
 	

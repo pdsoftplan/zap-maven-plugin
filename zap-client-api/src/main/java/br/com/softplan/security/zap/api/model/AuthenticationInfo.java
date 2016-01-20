@@ -37,6 +37,9 @@ public final class AuthenticationInfo {
 	private String passwordParameter;
 	private List<String> httpSessionTokens;
 	private SeleniumDriver seleniumDriver;
+	private String hostname;
+	private String realm;
+	private int port;
 
 	public static Builder builder() {
 		return new Builder();
@@ -109,6 +112,22 @@ public final class AuthenticationInfo {
 		return seleniumDriver;
 	}
 	
+	public String getHostname() {
+		return hostname;
+	}
+
+	public String getRealm() {
+		return realm;
+	}
+	
+	public int getPort() {
+		return port;
+	}
+	
+	public String getPortAsString() {
+		return String.valueOf(port);
+	}
+	
 	public static class Builder {
 		
 		private AuthenticationType type;
@@ -126,25 +145,23 @@ public final class AuthenticationInfo {
 		private String passwordParameter = DEFAULT_PASSWORD_PARAMETER;
 		private List<String> httpSessionTokens = new ArrayList<>();
 		private SeleniumDriver seleniumDriver = DEFAULT_SELENIUM_DRIVER;
+		private String hostname;
+		private String realm;
+		private int port;
 		
 		/**
-		 * Builds an {@code AuthenticationInfo} instance with the minimum information required for CAS authentication.
-		 * <p>
-		 * The {@code protectedPages} parameter is needed so we can access them after the authentication and before ZAP's
-		 * analysis. This is required to avoid circular redirections during the scan, not supported by ZAP.
+		 * Builds an {@code AuthenticationInfo} instance with the minimum information required for HTTP authentication.
 		 * 
-		 * @param loginUrl the login URL (i.e. {@code http://myapp.com/login}).
-		 * @param username the username that will be authenticated.
-		 * @param password the user's password.
-		 * @param protectedPages an array of URLs with at least one protected page for each context that will be analyzed.
+		 * @param hostname the host name for HTTP authentication.
+		 * @param realm the realm for HTTP authentication.
 		 * @return the built {@link AuthenticationInfo} instance.
 		 */
-		public AuthenticationInfo buildCasAuthenticationInfo(String loginUrl, String username, String password, String... protectedPages) {
-			return type(AuthenticationType.CAS)
-					.loginUrl(loginUrl)
+		public AuthenticationInfo buildHttpAuthenticationInfo(String username, String password, String hostname, String realm) {
+			return type(AuthenticationType.HTTP)
 					.username(username)
 					.password(password)
-					.protectedPages(protectedPages)
+					.hostname(hostname)
+					.realm(realm)
 					.build();
 		}
 		
@@ -165,22 +182,23 @@ public final class AuthenticationInfo {
 		}
 		
 		/**
-		 * Builds an {@code AuthenticationInfo} instance for form authentication.
+		 * Builds an {@code AuthenticationInfo} instance with the minimum information required for CAS authentication.
+		 * <p>
+		 * The {@code protectedPages} parameter is needed so we can access them after the authentication and before ZAP's
+		 * analysis. This is required to avoid circular redirections during the scan, not supported by ZAP.
 		 * 
 		 * @param loginUrl the login URL (i.e. {@code http://myapp.com/login}).
 		 * @param username the username that will be authenticated.
 		 * @param password the user's password.
+		 * @param protectedPages an array of URLs with at least one protected page for each context that will be analyzed.
 		 * @return the built {@link AuthenticationInfo} instance.
 		 */
-		public AuthenticationInfo buildFormAuthenticationInfo(String loginUrl, String usernameParameter, String username, 
-				String passwordParameter, String password) {
-			return type(AuthenticationType.FORM)
+		public AuthenticationInfo buildCasAuthenticationInfo(String loginUrl, String username, String password, String... protectedPages) {
+			return type(AuthenticationType.CAS)
 					.loginUrl(loginUrl)
-					.usernameParameter(usernameParameter)
 					.username(username)
-					.passwordParameter(passwordParameter)
 					.password(password)
-					.loginRequestData()
+					.protectedPages(protectedPages)
 					.build();
 		}
 		
@@ -414,6 +432,39 @@ public final class AuthenticationInfo {
 		}
 		
 		/**
+		 * Sets the host name for HTTP authentication.
+		 * 
+		 * @param hostname the host name for HTTP authentication. 
+		 * @return this {@code Builder} instance.
+		 */
+		public Builder hostname(String hostname) {
+			this.hostname = hostname;
+			return this;
+		}
+		
+		/**
+		 * Sets the realm for HTTP authentication.
+		 * 
+		 * @param realm the realm for HTTP authentication. 
+		 * @return this {@code Builder} instance.
+		 */
+		public Builder realm(String realm) {
+			this.realm = realm;
+			return this;
+		}
+		
+		/**
+		 * Sets the port for HTTP authentication.
+		 * 
+		 * @param port the port for HTTP authentication. 
+		 * @return this {@code Builder} instance.
+		 */
+		public Builder port(int port) {
+			this.port = port;
+			return this;
+		}
+		
+		/**
 		 * Validates and builds an {@link AuthenticationInfo} instance based on the builder parameters.
 		 * 
 		 * @return a {@link AuthenticationInfo} instance.
@@ -442,6 +493,9 @@ public final class AuthenticationInfo {
 		this.passwordParameter              = builder.passwordParameter;
 		this.httpSessionTokens              = builder.httpSessionTokens;
 		this.seleniumDriver                 = builder.seleniumDriver;
+		this.hostname                       = builder.hostname;
+		this.realm                          = builder.realm;
+		this.port                           = builder.port;
 	}
 	
 	@Override
@@ -461,6 +515,9 @@ public final class AuthenticationInfo {
 				.append("passwordParameter", passwordParameter)
 				.append("httpSessionTokens", httpSessionTokens)
 				.append("seleniumDriver", seleniumDriver)
+				.append("hostname", hostname)
+				.append("realm", realm)
+				.append("port", port)
 				.toString();
 	}
 

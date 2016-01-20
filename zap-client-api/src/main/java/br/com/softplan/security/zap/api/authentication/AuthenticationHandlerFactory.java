@@ -20,6 +20,7 @@ public final class AuthenticationHandlerFactory {
 			case FORM:     return new FormAuthenticationHandler(api, zapInfo, authenticationInfo);
 			case CAS:      return new CasAuthenticationHandler(api, zapInfo, authenticationInfo);
 			case SELENIUM: return new SeleniumAuthenticationHandler(api, zapInfo, authenticationInfo);
+			case HTTP:     return new HttpAuthenticationHandler(api, zapInfo, authenticationInfo);
 			default:       return null;
 		}
 	}

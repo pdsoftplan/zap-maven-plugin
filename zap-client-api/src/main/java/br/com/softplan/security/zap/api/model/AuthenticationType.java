@@ -7,6 +7,7 @@ package br.com.softplan.security.zap.api.model;
  */
 public enum AuthenticationType {
 
+	HTTP,
 	FORM, 
 	CAS, 
 	SELENIUM;
