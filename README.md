@@ -99,16 +99,24 @@ reportPath  | Absolute or relative path where the generated reports will be save
 
 Parameter | Description | Required?
 --- | --- | ---
-authenticationType | Define the authentication type: 'form', 'CAS' or 'selenium' | Yes, for authenticated analysis
-loginUrl           | Login page URL                                              | Yes, for authenticated analysis
-username           | Username used in the authentication                         | Yes, for authenticated analysis
-password           | Password used in the authentication                         | Yes, for authenticated analysis
+authenticationType | Define the authentication type: 'http', 'form', 'cas' or 'selenium' | Yes, for authenticated analysis
+loginUrl           | Login page URL                                                      | Yes, for authenticated analysis
+username           | Username used in the authentication                                 | Yes, for authenticated analysis
+password           | Password used in the authentication                                 | Yes, for authenticated analysis
 extraPostData      | Used to define any extra parameters that must be passed in the authentication request (e.g. *domain=someDomain&param=value*) | No
 loggedInRegex      | Regex that identifies a pattern in authenticated responses (needed to allow re-authentication)     | No
 loggedOutRegex     | Regex that identifies a pattern in non-authenticated responses (needed to allow re-authentication) | No
 excludeFromScan    | Define the URLs regexs that will be excluded from the scan | No
 
-**CAS only authentication parameter:**
+**HTTP authentication parameters:**
+
+Parameter | Description | Required? | Default
+--- | --- | --- | ---
+hostname  | The host name of the server where the authentication is done | Yes | -
+realm     | The realm the credentials apply to | Yes | -
+port      | The port of the server where the authentication is done | No  | 80
+
+**CAS authentication parameter:**
 
 Parameter | Description | Required?
 --- | --- | ---
@@ -116,14 +124,14 @@ protectedPages | Define the URL of a protected page of the application that will
 
 > As it was stated, the option *protectedPage* should have as value the URL of a protected page of the application that will be scanned. For CAS authentication, the login is done directly at the CAS server. Thus, in the first access to the application there will be a redirect to the server, that ends up redirecting the user back to the protected page, since the user is already authenticated. ZAP doesn't support this circular redirect, and because of that the application needs to be accessed at least once before the scan is started. This option defines the URL of a protected page that will be accessed after the authentication and before the scan to make sure the circular redirect won't happen during ZAP's analysis.
 
-**Form and Selenium only authentication parameters:**
+**Form and Selenium authentication parameters:**
 
 Parameter | Description | Required? | Default
 --- | --- | --- | ---
 usernameParameter  | Name of the request parameter that holds the username | No | username
 passwordParameter  | Name of the request parameter that holds the password | No | password
 
-**Selenium only authentication parameters:**
+**Selenium authentication parameters:**
 
 Parameter | Description | Required? | Default
 --- | --- | --- | ---
@@ -151,7 +159,9 @@ Notice that the parameters *excludeFromScan*, *protectedPages* and *httpSessionT
 
 ## Authentication Strategies
 
-There are three ways to perform authenticated scans with the ZAP Maven Plugin. The first and most simple one is the form based authentication. This should be used for very simple form authentications (like the one found in the [bodgeit](https://github.com/psiinon/bodgeit) application), where all you need to authenticate is a simple POST request. This strategy uses ZAP's form authentication mechanism, thus reauthentication is possible (through *loggedIn* and *loggedOutRegex* parameters).
+There are three ways to perform authenticated scans with the ZAP Maven Plugin. The first and most simple one is the HTTP  authentication. According to ZAP, three authentication schemes are supported: Basic, Digest, and NTLM, and reauthentication is possible. The *hostname* and *realm* parameters are passed to ZAP, which handles the authentication process.
+
+The second is the form based authentication. This should be used for very simple form authentications (like the one found in the [bodgeit](https://github.com/psiinon/bodgeit) application), where all you need to authenticate is a simple POST request. This strategy uses ZAP's form authentication mechanism, thus reauthentication is possible (through *loggedIn* and *loggedOutRegex* parameters).
 
 It's also possible to run authenticated scans on applications that use [CAS](http://jasig.github.io/cas/). This strategy uses ZAP's script authentication mechanism with a script to perform the CAS authentication. It might not work for all possible CAS configurations (there are many), and as with the form authentication, reauthentication is possible.
 
