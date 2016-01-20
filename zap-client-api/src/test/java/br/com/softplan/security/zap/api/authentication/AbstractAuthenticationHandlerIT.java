@@ -9,6 +9,7 @@ import org.testng.annotations.Test;
 
 import br.com.softplan.security.zap.api.ZapHelper;
 import br.com.softplan.security.zap.api.exception.ZapClientException;
+import br.com.softplan.security.zap.api.model.AnalysisInfo;
 import br.com.softplan.security.zap.api.model.AuthenticationInfo;
 import br.com.softplan.security.zap.api.util.BaseIT;
 import br.com.softplan.security.zap.zaproxy.clientapi.core.ApiResponse;
@@ -21,8 +22,8 @@ public class AbstractAuthenticationHandlerIT extends BaseIT {
 
 	@Test
 	public void includeTargetInContextTest() throws ClientApiException {
-		String targetUrl = "targetUrl";
-		ZapHelper.includeInContext(api, zapInfo.getApiKey(), targetUrl);
+		String targetUrl = "http://targetUrl";
+		ZapHelper.includeInContext(api, zapInfo.getApiKey(), AnalysisInfo.builder().targetUrl(targetUrl).build());
 		
 		ApiResponseElement response = (ApiResponseElement) api.context.includeRegexs("Default Context");
 		String includedInContext = response.getValue();

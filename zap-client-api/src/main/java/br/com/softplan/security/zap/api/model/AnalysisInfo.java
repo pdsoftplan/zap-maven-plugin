@@ -1,5 +1,6 @@
 package br.com.softplan.security.zap.api.model;
 
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -19,7 +20,7 @@ public class AnalysisInfo {
 	private String targetUrl;
 	private String spiderStartingPointUrl;
 	private String activeScanStartingPointUrl;
-	private String context;
+	private String[] context;
 	
 	private long analysisTimeoutInMinutes;
 	private AnalysisType analysisType;
@@ -47,11 +48,11 @@ public class AnalysisInfo {
 		return targetUrl;
 	}
 	
-	public String getContext() {
-		if (context != null) {
+	public String[] getContext() {
+		if (context != null && context.length > 0) {
 			return context;
 		}
-		return targetUrl;
+		return new String[]{targetUrl};
 	}
 
 	public long getAnalysisTimeoutInMillis() {
@@ -75,7 +76,7 @@ public class AnalysisInfo {
 		private String targetUrl;
 		private String spiderStartingPointUrl;
 		private String activeScanStartingPointUrl;
-		private String context;
+		private String[] context;
 		private long analysisTimeoutInMinutes = DEFAULT_ANALYSIS_TIMEOUT_IN_MINUTES;
 		private AnalysisType analysisType = DEFAULT_ANALYSIS_TYPE;
 		private boolean shouldStartNewSession = DEFAULT_SHOULD_START_NEW_SESSION;
@@ -114,12 +115,12 @@ public class AnalysisInfo {
 		}
 		
 		/**
-		 * Sets the context to be set on ZAP.
+		 * Sets the URLs to be set as the context of ZAP.
 		 * 
-		 * @param context the context to be set on ZAP.
+		 * @param context an array of URLs (absolute or relative) to be set on ZAP's context.
 		 * @return this {@code Builder} instance.
 		 */
-		public Builder context(String context) {
+		public Builder context(String[] context) {
 			this.context = context;
 			return this;
 		}
@@ -219,7 +220,7 @@ public class AnalysisInfo {
 				.append("spiderStartingPointUrl", spiderStartingPointUrl)
 				.append("activeScanStartingPointUrl", activeScanStartingPointUrl)
 				.append("analysisTimeoutInMinutes", analysisTimeoutInMinutes)
-				.append("context", context)
+				.append("context", Arrays.toString(context))
 				.append("analysisType", analysisType)
 				.append("shouldStartNewSession", shouldStartNewSession)
 				.toString();

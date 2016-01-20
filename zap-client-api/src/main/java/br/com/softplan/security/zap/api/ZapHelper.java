@@ -1,9 +1,12 @@
 package br.com.softplan.security.zap.api;
 
+import java.util.Arrays;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import br.com.softplan.security.zap.api.exception.ZapClientException;
+import br.com.softplan.security.zap.api.model.AnalysisInfo;
 import br.com.softplan.security.zap.zaproxy.clientapi.core.ApiResponse;
 import br.com.softplan.security.zap.zaproxy.clientapi.core.ApiResponseElement;
 import br.com.softplan.security.zap.zaproxy.clientapi.core.ClientApi;
@@ -35,16 +38,26 @@ public class ZapHelper {
 		}
 	}
 	
-	public static void includeInContext(ClientApi api, String apiKey, String targetUrl) {
-		LOGGER.debug("Including target '{}' in context.", targetUrl);
+	public static void includeInContext(ClientApi api, String apiKey, AnalysisInfo analysisInfo) {
+		String[] context = analysisInfo.getContext();
+		LOGGER.debug("Including target '{}' in context.", Arrays.toString(context));
 		
 		try {
-			ApiResponse response = api.context.includeInContext(apiKey, ZAP_DEFAULT_CONTEXT_NAME, "\\Q" + targetUrl + "\\E.*");
-			validateResponse(response, "Include target in context.");
+			for (String contextUrl : context) {
+				if (isContextUrlRelative(contextUrl)) {
+					contextUrl = analysisInfo.getActiveScanStartingPointUrl() + contextUrl;
+				}
+				ApiResponse response = api.context.includeInContext(apiKey, ZAP_DEFAULT_CONTEXT_NAME, "\\Q" + contextUrl + "\\E.*");
+				validateResponse(response, "Include target in context.");
+			}
 		} catch (ClientApiException e) {
 			LOGGER.error("Error including target in context.", e);
 			throw new ZapClientException(e);
 		}
+	}
+	
+	private static boolean isContextUrlRelative(String contextUrl) {
+		return !contextUrl.startsWith("http");
 	}
 	
 	private ZapHelper() {}

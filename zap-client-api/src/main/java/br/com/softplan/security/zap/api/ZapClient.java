@@ -55,7 +55,7 @@ public class ZapClient {
 			sessionManager.createNewSession(api, apiKey);
 		}
 
-		ZapHelper.includeInContext(api, apiKey, analysisInfo.getContext());
+		ZapHelper.includeInContext(api, apiKey, analysisInfo);
 		
 		if (authenticationHandler != null) {
 			authenticationHandler.handleAuthentication(analysisInfo.getTargetUrl());
