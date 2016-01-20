@@ -68,6 +68,7 @@ Parameter | Description | Required? | Default
 targetUrl                      | URL of the application that will be scanned  | Yes | -
 spiderStartingPointUrl         | Starting point URL for the Spider (and AJAX Spider, in case it runs) | No | *targetUrl*
 activeScanStartingPointUrl     | Starting point URL for the Active Scan       | No  | *targetUrl*
+contextUrl                     | The context to be set on ZAP                 | No  | *targetUrl*
 analysisTimeoutInMinutes       | Analysis timeout in minutes                  | No  | 480
 shouldRunAjaxSpider            | Indicates whether ZAP should execute the [AJAX Spider](https://github.com/zaproxy/zap-core-help/wiki/HelpAddonsSpiderAjaxConcepts) after the default Spider (it can improve the scan on applications that rely on AJAX)     | No  | false
 shouldRunPassiveScanOnly       | In case it's true, the Active Scan will not be executed | No | false
