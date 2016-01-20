@@ -65,16 +65,16 @@ The goals that run analysis save the generated reports in the end of the plugin 
 
 Parameter | Description | Required? | Default
 --- | --- | --- | ---
-targetUrl                      | URL of the application that will be scanned  | Yes | -
-spiderStartingPointUrl         | Starting point URL for the Spider (and AJAX Spider, in case it runs) | No | *targetUrl*
-activeScanStartingPointUrl     | Starting point URL for the Active Scan       | No  | *targetUrl*
-contextUrl                     | The context to be set on ZAP                 | No  | *targetUrl*
-analysisTimeoutInMinutes       | Analysis timeout in minutes                  | No  | 480
+targetUrl                      | URL of the application that will be scanned                          | Yes | -
+spiderStartingPointUrl         | Starting point URL for the Spider (and AJAX Spider, in case it runs) | No  | *targetUrl*
+activeScanStartingPointUrl     | Starting point URL for the Active Scan                               | No  | *targetUrl*
+context                        | The context URLs to be set on ZAP (absolute or relative)             | No  | *targetUrl*
+analysisTimeoutInMinutes       | Analysis timeout in minutes                                          | No  | 480
 shouldRunAjaxSpider            | Indicates whether ZAP should execute the [AJAX Spider](https://github.com/zaproxy/zap-core-help/wiki/HelpAddonsSpiderAjaxConcepts) after the default Spider (it can improve the scan on applications that rely on AJAX)     | No  | false
 shouldRunPassiveScanOnly       | In case it's true, the Active Scan will not be executed | No | false
 shouldStartNewSession          | Indicates whether a new session should be started on ZAP before the analysis | No | true
 
-> If both *spiderStartingPoint* and *activeScanStartingPoint* are provided, *targetUrl* will be ignored. These options are useful when you want to spider through the whole application, but want to run the Active Scan for only a portion of it.
+> If both *spiderStartingPoint* and *activeScanStartingPoint* are provided, *targetUrl* will be ignored. These options are useful when you want to spider through the whole application, but want to run the Active Scan for only a portion of it. These parameters, together with the *context* parameter, are very sensitive and should be set accordingly.
 
 **ZAP related parameters:**
 
@@ -140,19 +140,16 @@ seleniumDriver     | The web driver that will be used to perform authentication:
 
 > It's important to realize that the `HtmlUnitDriver` lacks complete support for JavaScript. Therefore, it might not always work properly.
 
-Notice that the parameters *excludeFromScan*, *protectedPages* and *httpSessionTokens* accept multiple values, like in the example below:
+Notice that the parameters *context*, *excludeFromScan*, *protectedPages* and *httpSessionTokens* accept multiple values, like in the example below:
 
 ```xml
 <excludeFromScan>
     <!-- It doesn't matter how you name the inner tag -->
     <exclude1>http://myapp/logout</exclude1>
-    <exclude2>http://myapp/forbidden</exclude1>
+    <exclude2>http://myapp/forbidden</exclude2>
 </excludeFromScan>
-<protectedPages>
-    <!-- And even for only one item, the inner tag is necessary -->
-    <protectedPage>http://myapp/protected/index</protectedPage>
-</protectedPages>
 <httpSessionTokens>
+    <!-- And even for only one item, the inner tag is necessary -->
     <token>LtpaToken2</token>
 </httpSessionTokens>
 ```
