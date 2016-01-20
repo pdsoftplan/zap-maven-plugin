@@ -108,7 +108,7 @@ loggedInRegex      | Regex that identifies a pattern in authenticated responses 
 loggedOutRegex     | Regex that identifies a pattern in non-authenticated responses (needed to allow re-authentication) | No
 excludeFromScan    | Define the URLs regexs that will be excluded from the scan | No
 
-**HTTP only authentication parameters:**
+**HTTP authentication parameters:**
 
 Parameter | Description | Required? | Default
 --- | --- | --- | ---
@@ -116,7 +116,7 @@ hostname  | The host name of the server where the authentication is done | Yes |
 realm     | The realm the credentials apply to | Yes | -
 port      | The port of the server where the authentication is done | No  | 80
 
-**CAS only authentication parameter:**
+**CAS authentication parameter:**
 
 Parameter | Description | Required?
 --- | --- | ---
@@ -124,14 +124,14 @@ protectedPages | Define the URL of a protected page of the application that will
 
 > As it was stated, the option *protectedPage* should have as value the URL of a protected page of the application that will be scanned. For CAS authentication, the login is done directly at the CAS server. Thus, in the first access to the application there will be a redirect to the server, that ends up redirecting the user back to the protected page, since the user is already authenticated. ZAP doesn't support this circular redirect, and because of that the application needs to be accessed at least once before the scan is started. This option defines the URL of a protected page that will be accessed after the authentication and before the scan to make sure the circular redirect won't happen during ZAP's analysis.
 
-**Form and Selenium only authentication parameters:**
+**Form and Selenium authentication parameters:**
 
 Parameter | Description | Required? | Default
 --- | --- | --- | ---
 usernameParameter  | Name of the request parameter that holds the username | No | username
 passwordParameter  | Name of the request parameter that holds the password | No | password
 
-**Selenium only authentication parameters:**
+**Selenium authentication parameters:**
 
 Parameter | Description | Required? | Default
 --- | --- | --- | ---
