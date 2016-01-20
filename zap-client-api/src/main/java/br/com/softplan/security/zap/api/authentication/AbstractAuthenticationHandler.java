@@ -28,7 +28,6 @@ public abstract class AbstractAuthenticationHandler implements AuthenticationHan
 	
 	protected static final String UTF_8 = StandardCharsets.UTF_8.name();
 	
-	protected static final String ZAP_DEFAULT_CONTEXT_NAME = "Default Context";
 	protected static final String ZAP_DEFAULT_CONTEXT_ID = "1";
 	protected static final String ZAP_DEFAULT_SESSION_NAME = "Session 0";
 	
@@ -69,7 +68,6 @@ public abstract class AbstractAuthenticationHandler implements AuthenticationHan
 	public void handleAuthentication(String targetUrl) {
 		LOGGER.debug("--- Starting authentication handling ---");
 		
-		includeTargetInContext(targetUrl);
 		setupAuthentication(targetUrl);
 		excludeUrlsFromScanners();
 		setupLoggedInAndOutRegex();
@@ -77,20 +75,6 @@ public abstract class AbstractAuthenticationHandler implements AuthenticationHan
 		LOGGER.debug("--- Finished authentication handling ---\n");
 	}
 
-	protected void includeTargetInContext(String targetUrl) {
-		LOGGER.debug("Including target '{}' in context.", targetUrl);
-		
-		try {
-			ApiResponse response = api.context.includeInContext(
-					apiKey, ZAP_DEFAULT_CONTEXT_NAME, "\\Q" + targetUrl + "\\E.*");
-			ZapHelper.validateResponse(response, "Include target in context.");
-			
-		} catch (ClientApiException e) {
-			LOGGER.error("Error including target in context.", e);
-			throw new ZapClientException(e);
-		}
-	}
-	
 	protected abstract void setupAuthentication(String targetUrl);
 	
 	protected void excludeUrlsFromScanners() {

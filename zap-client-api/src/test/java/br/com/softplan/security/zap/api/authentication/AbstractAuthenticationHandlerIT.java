@@ -22,11 +22,9 @@ public class AbstractAuthenticationHandlerIT extends BaseIT {
 	@Test
 	public void includeTargetInContextTest() throws ClientApiException {
 		String targetUrl = "targetUrl";
-		AbstractAuthenticationHandler nilHandler = new NilAuthenticationHandler(api, zapInfo, 
-				AuthenticationInfo.builder().buildFormAuthenticationInfo("loginUrl", "username", "password"));
-		nilHandler.includeTargetInContext(targetUrl);
+		ZapHelper.includeInContext(api, zapInfo.getApiKey(), targetUrl);
 		
-		ApiResponseElement response = (ApiResponseElement) api.context.includeRegexs(AbstractAuthenticationHandler.ZAP_DEFAULT_CONTEXT_NAME);
+		ApiResponseElement response = (ApiResponseElement) api.context.includeRegexs("Default Context");
 		String includedInContext = response.getValue();
 		assertTrue(includedInContext.contains("\\Q" + targetUrl + "\\E"));
 	}

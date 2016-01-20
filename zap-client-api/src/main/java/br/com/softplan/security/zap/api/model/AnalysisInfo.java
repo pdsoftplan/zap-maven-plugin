@@ -19,6 +19,7 @@ public class AnalysisInfo {
 	private String targetUrl;
 	private String spiderStartingPointUrl;
 	private String activeScanStartingPointUrl;
+	private String context;
 	
 	private long analysisTimeoutInMinutes;
 	private AnalysisType analysisType;
@@ -33,11 +34,24 @@ public class AnalysisInfo {
 	}
 	
 	public String getSpiderStartingPointUrl() {
-		return spiderStartingPointUrl;
+		if (spiderStartingPointUrl != null) {
+			return spiderStartingPointUrl;
+		}
+		return targetUrl;
 	}
 
 	public String getActiveScanStartingPointUrl() {
-		return activeScanStartingPointUrl;
+		if (activeScanStartingPointUrl != null) {
+			return activeScanStartingPointUrl;
+		}
+		return targetUrl;
+	}
+	
+	public String getContext() {
+		if (context != null) {
+			return context;
+		}
+		return targetUrl;
 	}
 
 	public long getAnalysisTimeoutInMillis() {
@@ -61,6 +75,7 @@ public class AnalysisInfo {
 		private String targetUrl;
 		private String spiderStartingPointUrl;
 		private String activeScanStartingPointUrl;
+		private String context;
 		private long analysisTimeoutInMinutes = DEFAULT_ANALYSIS_TIMEOUT_IN_MINUTES;
 		private AnalysisType analysisType = DEFAULT_ANALYSIS_TYPE;
 		private boolean shouldStartNewSession = DEFAULT_SHOULD_START_NEW_SESSION;
@@ -95,6 +110,17 @@ public class AnalysisInfo {
 		 */
 		public Builder activeScanStartingPointUrl(String activeScanStartingPointUrl) {
 			this.activeScanStartingPointUrl = activeScanStartingPointUrl;
+			return this;
+		}
+		
+		/**
+		 * Sets the context to be set on ZAP.
+		 * 
+		 * @param context the context to be set on ZAP.
+		 * @return this {@code Builder} instance.
+		 */
+		public Builder context(String context) {
+			this.context = context;
 			return this;
 		}
 		
@@ -180,6 +206,7 @@ public class AnalysisInfo {
 		this.targetUrl                  = builder.targetUrl;
 		this.spiderStartingPointUrl     = builder.spiderStartingPointUrl;
 		this.activeScanStartingPointUrl = builder.activeScanStartingPointUrl;
+		this.context                    = builder.context;
 		this.analysisTimeoutInMinutes   = builder.analysisTimeoutInMinutes;
 		this.analysisType               = builder.analysisType;
 		this.shouldStartNewSession      = builder.shouldStartNewSession;
@@ -192,6 +219,7 @@ public class AnalysisInfo {
 				.append("spiderStartingPointUrl", spiderStartingPointUrl)
 				.append("activeScanStartingPointUrl", activeScanStartingPointUrl)
 				.append("analysisTimeoutInMinutes", analysisTimeoutInMinutes)
+				.append("context", context)
 				.append("analysisType", analysisType)
 				.append("shouldStartNewSession", shouldStartNewSession)
 				.toString();

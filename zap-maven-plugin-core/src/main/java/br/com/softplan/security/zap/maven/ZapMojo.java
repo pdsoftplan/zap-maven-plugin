@@ -24,6 +24,7 @@ public abstract class ZapMojo extends AbstractMojo {
 	@Parameter(required=true) private String targetUrl;
 	@Parameter private String spiderStartingPointUrl;
 	@Parameter private String activeScanStartingPointUrl;
+	@Parameter private String context;
 	@Parameter(defaultValue="480")   private int analysisTimeoutInMinutes;
 	@Parameter(defaultValue="false") private boolean shouldRunAjaxSpider;
 	@Parameter(defaultValue="false") private boolean shouldRunPassiveScanOnly;
@@ -113,6 +114,7 @@ public abstract class ZapMojo extends AbstractMojo {
 				.targetUrl(targetUrl)
 				.spiderStartingPointUrl(spiderStartingPointUrl)
 				.activeScanStartingPointUrl(activeScanStartingPointUrl)
+				.context(context)
 				.analysisTimeoutInMinutes(analysisTimeoutInMinutes)
 				.analysisType(analysisType)
 				.shouldStartNewSession(shouldStartNewSession)
