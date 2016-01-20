@@ -68,6 +68,7 @@ Parameter | Description | Required? | Default
 targetUrl                      | URL of the application that will be scanned  | Yes | -
 spiderStartingPointUrl         | Starting point URL for the Spider (and AJAX Spider, in case it runs) | No | *targetUrl*
 activeScanStartingPointUrl     | Starting point URL for the Active Scan       | No  | *targetUrl*
+contextUrl                     | The context to be set on ZAP                 | No  | *targetUrl*
 analysisTimeoutInMinutes       | Analysis timeout in minutes                  | No  | 480
 shouldRunAjaxSpider            | Indicates whether ZAP should execute the [AJAX Spider](https://github.com/zaproxy/zap-core-help/wiki/HelpAddonsSpiderAjaxConcepts) after the default Spider (it can improve the scan on applications that rely on AJAX)     | No  | false
 shouldRunPassiveScanOnly       | In case it's true, the Active Scan will not be executed | No | false
@@ -135,11 +136,12 @@ Notice that the parameters *excludeFromScan*, *protectedPages* and *httpSessionT
 
 ```xml
 <excludeFromScan>
-    <!-- It doesn't matter how you name the inner tag, as long as you remain consistent -->
-    <param>http://myapp/logout</param>
-    <param>http://myapp/forbidden</param>
+    <!-- It doesn't matter how you name the inner tag -->
+    <exclude1>http://myapp/logout</exclude1>
+    <exclude2>http://myapp/forbidden</exclude1>
 </excludeFromScan>
 <protectedPages>
+    <!-- And even for only one item, the inner tag is necessary -->
     <protectedPage>http://myapp/protected/index</protectedPage>
 </protectedPages>
 <httpSessionTokens>
