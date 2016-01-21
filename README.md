@@ -8,7 +8,7 @@
 This plugin makes it easier to integrate [OWASP Zed Attack Proxy (ZAP)](https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project) security tests with the application development and build process for Maven users. With this plugin, you can:
 
 - Run ZAP analysis during the build of your application;
-- Run authenticated analysis on [CAS](http://jasig.github.io/cas/) applications and on many other applications with complex authentication strategies;
+- Run authenticated analysis on [CAS](http://jasig.github.io/cas/) and on many other applications with complex authentication strategies;
 - Use your [Selenium](http://www.seleniumhq.org) integration tests navigation to feed ZAP;
 - Easily run ZAP analysis during development.
 
@@ -23,6 +23,7 @@ This plugin makes it easier to integrate [OWASP Zed Attack Proxy (ZAP)](https://
     - [Starting ZAP with Docker](#starting-zap-with-docker)
     - [Form authentication example](#form-authentication-example)
     - [CAS authentication example](#cas-authentication-example)
+    - [Selenium authentication example](#selenium-authentication-example)
 - [Selenium Integration](#selenium-integration)
 
 ## Usage
@@ -46,16 +47,16 @@ Generally, the plugin configuration will follow the format below:
 </plugin>
 ```
 
-> It is necessary to define the phase where the plugin will be executed, as well as the goal that will be executed. Optionally, the plugin can be executed by directly calling the desired goal:
+> If you want to bind the plugin execution to the build lifecycle, it is necessary to define the phase where the plugin will be executed, as well as the goal that will be executed. Optionally, the plugin can be executed by directly calling the desired goal:
 > ```
 > mvn br.com.softplan.security.zap:zap-maven-plugin:analyze
 > ```
 
 The main goal provided is *analyze*, responsible to execute a ZAP analysis according to the configuration parameters. However, the plugin also provides other goals for more specific situations. The list of available goals is presented bellow:
 
-- *analyze*: performs a complete analysis running (by default) the [Spider](https://github.com/zaproxy/zap-core-help/wiki/HelpStartConceptsSpider) before the [Active Scan](https://github.com/zaproxy/zap-core-help/wiki/HelpStartConceptsAscan) and starting ZAP automatically if necessary (and closing it after the analysis).
-- *startZap*: simply starts ZAP (via local installation or Docker).
-- *seleniumAnalyze*: assumes ZAP is already executing and simply runs the Active Scan, closing ZAP after the analysis. This goal is useful when there are [Selenium](http://www.seleniumhq.org) integration tests that are executed with a proxy to ZAP and the navigation done by the tests should be used instead of the Spider. More on that at [Selenium Integration](#selenium-integration).
+- ***analyze***: performs a complete analysis running (by default) the [Spider](https://github.com/zaproxy/zap-core-help/wiki/HelpStartConceptsSpider) before the [Active Scan](https://github.com/zaproxy/zap-core-help/wiki/HelpStartConceptsAscan) and starting ZAP automatically if necessary (and closing it after the analysis).
+- ***startZap***: simply starts ZAP (via local installation or Docker).
+- ***seleniumAnalyze***: assumes ZAP is already executing and simply runs the Active Scan, closing ZAP after the analysis. This goal is useful when there are [Selenium](http://www.seleniumhq.org) integration tests that are executed with a proxy to ZAP and the navigation done by the tests should be used instead of the Spider. More on that at [Selenium Integration](#selenium-integration).
 
 The goals that run analysis save the generated reports in the end of the plugin execution. By default, the reports are saved in the directory `target/zap-reports` within the project. The parameter *reportPath* can be used to specify another directory (absolute or relative).
 
@@ -74,7 +75,7 @@ shouldRunAjaxSpider            | Indicates whether ZAP should execute the [AJAX 
 shouldRunPassiveScanOnly       | In case it's true, the Active Scan will not be executed | No | false
 shouldStartNewSession          | Indicates whether a new session should be started on ZAP before the analysis | No | true
 
-> If both *spiderStartingPoint* and *activeScanStartingPoint* are provided, *targetUrl* will be ignored. These options are useful when you want to spider through the whole application, but want to run the Active Scan for only a portion of it. These parameters, together with the *context* parameter, are very sensitive and should be set accordingly.
+> If the options *spiderStartingPoint*, *activeScanStartingPoint* and *context* are all provided, *targetUrl* will be ignored. These options are useful when you want to spider through the whole application, but want to run the Active Scan for only a portion of it, for instance. These parameters are very sensitive and should be set accordingly.
 
 **ZAP related parameters:**
 
@@ -158,13 +159,13 @@ Notice that the parameters *context*, *excludeFromScan*, *protectedPages* and *h
 
 ## Authentication Strategies
 
-There are three ways to perform authenticated scans with the ZAP Maven Plugin. The first and most simple one is the HTTP  authentication. According to ZAP, three authentication schemes are supported: Basic, Digest, and NTLM, and reauthentication is possible. The *hostname* and *realm* parameters are passed to ZAP, which handles the authentication process.
+There are three ways to perform authenticated scans with the ZAP Maven Plugin. The first and most simple one is the HTTP  authentication. According to ZAP, three authentication schemes are supported: Basic, Digest, and NTLM, and reauthentication is possible. The *hostname*, *realm* and (optional) *port* parameters are passed to ZAP, which handles the authentication process.
 
 The second is the form based authentication. This should be used for very simple form authentications (like the one found in the [bodgeit](https://github.com/psiinon/bodgeit) application), where all you need to authenticate is a simple POST request. This strategy uses ZAP's form authentication mechanism, thus reauthentication is possible (through *loggedIn* and *loggedOutRegex* parameters).
 
-It's also possible to run authenticated scans on applications that use [CAS](http://jasig.github.io/cas/). This strategy uses ZAP's script authentication mechanism with a script to perform the CAS authentication. It might not work for all possible CAS configurations (there are many), and as with the form authentication, reauthentication is possible.
+It's also possible to run authenticated scans on applications that use [CAS](http://jasig.github.io/cas/). This strategy uses ZAP's script authentication mechanism with a script to perform the CAS authentication. It might not work for all possible CAS configurations (there are many), and, as with the form authentication, reauthentication is possible.
 
-The last strategy uses [Selenium](http://www.seleniumhq.org). The idea is to perform the authentication via Selenium, and pass to ZAP the session created (i.e. the session cookie). This should work in most situations, including more complex form based authentications. However, reauthentication is not possible.
+The last strategy uses [Selenium](http://www.seleniumhq.org). The idea is to perform the authentication via Selenium, and pass to ZAP the session created (i.e. the session cookie). This should work in most situations, including more complex form based authentications. However, reauthentication is not possible, so make sure you use the *excludeFromScan* parameter to exclude the logout URL and avoid logging out during the scan.
 
 ## Examples
 
@@ -178,16 +179,11 @@ For this to work, ZAP must already be running.
     <artifactId>zap-maven-plugin</artifactId>
     <version>${zap-maven-plugin.version}</version>
     <configuration>
-        <zapHost>localhost</zapHost>
+        <!-- If ZAP is running on localhost, there is no need to define zapHost -->
+        <zapHost>10.10.3.4</zapHost>
         <zapPort>8080</zapPort>
         <targetUrl>http://localhost:8090/testwebapp</targetUrl>
     </configuration>
-    <executions>
-        <execution>
-            <phase>verify</phase>
-            <goals><goal>analyze</goal></goals>
-        </execution>
-    </executions>
 </plugin>
 ```
 
@@ -199,18 +195,12 @@ For ZAP to be automatically started, the option *zapPath* must be provided with 
 <plugin>
 	<groupId>br.com.softplan.security.zap</groupId>
 	<artifactId>zap-maven-plugin</artifactId>
-	<version>${zap.maven.plugin.version}</version>
+	<version>${zap-maven-plugin.version}</version>
 	<configuration>
 		<zapPort>8080</zapPort>
 		<targetUrl>http://localhost:8090/testwebapp</targetUrl>
 		<zapPath>C:\Program Files (x86)\OWASP\Zed Attack Proxy</zapPath>
 	</configuration>
-	<executions>
-		<execution>
-			<phase>verify</phase>
-			<goals><goal>analyze</goal></goals>
-		</execution>
-	</executions>
 </plugin>
 ```
 
@@ -224,18 +214,12 @@ If ZAP is not installed, you can still start ZAP with Docker. For this, Docker m
 <plugin>
 	<groupId>br.com.softplan.security.zap</groupId>
 	<artifactId>zap-maven-plugin</artifactId>
-	<version>${zap.maven.plugin.version}</version>
+	<version>${zap-maven-plugin.version}</version>
 	<configuration>
 		<zapPort>8080</zapPort>
 		<targetUrl>http://localhost:8090/testwebapp</targetUrl>
 		<shouldRunWithDocker>true</shouldRunWithDocker>
 	</configuration>
-	<executions>
-		<execution>
-			<phase>verify</phase>
-			<goals><goal>analyze</goal></goals>
-		</execution>
-	</executions>
 </plugin>
 ```
 
@@ -245,9 +229,8 @@ If ZAP is not installed, you can still start ZAP with Docker. For this, Docker m
 <plugin>
 	<groupId>br.com.softplan.security.zap</groupId>
 	<artifactId>zap-maven-plugin</artifactId>
-	<version>${zap.maven.plugin.version}</version>
+	<version>${zap-maven-plugin.version}</version>
 	<configuration>
-		<zapHost>localhost</zapHost>
     	<zapPort>8080</zapPort>
 		<targetUrl>http://localhost:8180/bodgeit</targetUrl>
 
@@ -257,16 +240,10 @@ If ZAP is not installed, you can still start ZAP with Docker. For this, Docker m
 		<loginUrl>http://localhost:8180/bodgeit/login.jsp</loginUrl>
 		<loggedInRegex><![CDATA[\\Q<a href=\"logout.jsp\">Logout</a>\\E]]></loggedInRegex>
 	</configuration>
-	<executions>
-		<execution>
-			<phase>verify</phase>
-			<goals><goal>analyze</goal></goals>
-		</execution>
-	</executions>
 </plugin>
 ```
 
-> Notice that it might be necessary to use the tag *![CDATA[]]* so the characters used within the parameter value are not parsed as part of the XML.
+> Notice that it might be necessary to use the tag `<![CDATA[]]>` so the characters used within the parameter value are not parsed as part of the XML.
 
 ### CAS authentication example
 
@@ -274,9 +251,8 @@ If ZAP is not installed, you can still start ZAP with Docker. For this, Docker m
 <plugin>
 	<groupId>br.com.softplan.security.zap</groupId>
 	<artifactId>zap-maven-plugin</artifactId>
-	<version>${zap.maven.plugin.version}</version>
+	<version>${zap-maven-plugin.version}</version>
 	<configuration>
-		<zapHost>localhost</zapHost>
 		<zapPort>8080</zapPort>
 		<targetUrl>https://localhost:8443/myapp</targetUrl>
 
@@ -289,22 +265,39 @@ If ZAP is not installed, you can still start ZAP with Docker. For this, Docker m
         </protectedPages>
         <loggedOutRegex><![CDATA[\\QLocation: https://localhost:8443/cas-server/\\E.*]]></loggedOutRegex>
 	</configuration>
-	<executions>
-		<execution>
-			<phase>verify</phase>
-			<goals><goal>analyze</goal></goals>
-		</execution>
-	</executions>
 </plugin>
 ```
 
 > A good way to achieve re-authentication with CAS is defining the *loggedOutRegex* with a value like `\QLocation: https://your.domain/your-cas-server\E.*`. Unauthenticated responses will be redirects to the CAS server, so this is the easiest way to identify that there was a redirection to the CAS server and thus the user is not logged in.
 
+### Selenium authentication example
+
+```xml
+<plugin>
+	<groupId>br.com.softplan.security.zap</groupId>
+	<artifactId>zap-maven-plugin</artifactId>
+	<version>${zap-maven-plugin.version}</version>
+	<configuration>
+		<zapPort>8080</zapPort>
+		<targetUrl>http://localhost:8090/testwebapp</targetUrl>
+
+        <authenticationType>selenium</authenticationType>
+        <username>user</username>
+        <password>pass</password>
+        <loginUrl>http://localhost:8090/testwebapp/login</loginUrl>
+        <httpSessionTokens>
+            <token>LtpaToken2</token>
+        </httpSessionTokens>
+        <seleniumDriver>phantomjs</seleniumDriver>
+	</configuration>
+</plugin>
+```
+
 ## Selenium Integration
 
-If your application has [Selenium](http://www.seleniumhq.org) integration tests that navigate through the application, it might be interesting to feed ZAP with the visited pages instead of relying on ZAP's Spider. The Spider can't ensure a complete navigation through the application. Besides that, by feeding ZAP with the visited pages, it's possible to define the analysis scope, since ZAP's tests will only be executed on the pages that were visited during the tests.
+If your application has [Selenium](http://www.seleniumhq.org) integration tests that navigate through the application, it might be interesting to feed ZAP with the visited pages instead of relying on ZAP's Spider. The Spider can't ensure a complete navigation through the application. Besides that, by feeding ZAP with the visited pages, it's possible to easily define the analysis scope, since ZAP's tests will only be executed on the pages that were visited during the tests.
 
-The goals *startZap* and *seleniumAnalyze* were developed because of this. With them, it's possible to start ZAP before the integration tests and execute the analysis after the tests, using the navigation done by the tests.
+With that in mind, the goals *startZap* and *seleniumAnalyze* were developed. With them, it's possible to start ZAP before the integration tests and execute the analysis after the tests, using the navigation done by the tests.
 
 The first step to feed ZAP with your integration tests navigation is to ensure the tests use ZAP as a proxy. This way, all requests made during the tests execution go through ZAP. The configuration needed for the most common drivers are presented bellow:
 
@@ -338,7 +331,7 @@ With that done, all that remains are the plugin goals configuration:
 <plugin>
     <groupId>br.com.softplan.security.zap</groupId>
     <artifactId>zap-maven-plugin</artifactId>
-    <version>${zap.maven.plugin.version}</version>
+    <version>${zap-maven-plugin.version}</version>
     <configuration>
 		<!-- whatever configuration -->
 	</configuration>
@@ -356,5 +349,7 @@ With that done, all that remains are the plugin goals configuration:
 	</executions>
 </plugin>
 ```
+
+This will ensure that ZAP is started before the integration tests, so the tests can be proxied through it. Also, with that configuration ZAP will only execute the analysis after the tests execution.
 
 :zap:
