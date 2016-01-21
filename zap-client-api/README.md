@@ -69,17 +69,27 @@ ZapInfo runningZapInfoWithTimeout = ZapInfo.builder().initializationTimeoutInMil
 
 ### AuthenticationInfo
 
-While `ZapInfo` stores everything related to ZAP, `AuthenticationInfo` keeps all the parameters needed for authentication. A builder is also provided to help create objects of this class. It has two main methods:
+While `ZapInfo` stores everything related to ZAP, `AuthenticationInfo` keeps all the parameters needed for authentication. A builder is also provided to help create objects of this class. It has four main methods:
 
-- `buildCasAuthenticationInfo()`
+- `buildHttpAuthenticationInfo()`
 - `buildFormAuthenticationInfo()`
+- `buildCasAuthenticationInfo()`
+- `buildSeleniumAuthenticationInfo()`
 
-These methods make it easier to create `AuthenticationInfo` instances for each authentication type supported so far: CAS and form. Both methods receive as parameters the minimum necessary for each authentication type. However, it will normally be necessary to provide aditional parameters (to enable re-authentication, for instance). There are many options that can be set; the most common cases are presented below:
+These methods make it easier to create `AuthenticationInfo` instances for each authentication type supported so far: HTTP, form based, CAS and Selenium. Both methods receive as parameters the minimum necessary for each authentication type. However, it will normally be necessary to provide aditional parameters (to enable re-authentication, for instance). There are many options that can be set; the most common cases are presented below:
 
 ```java
 // On form based authentication, the required parameters are just loginUrl, username and password
 AuthenticationInfo formInfo = AuthenticationInfo.builder()
         .buildFormAuthenticationInfo("http://myapp/login", "username", "password");
+
+// The same stands for Selenium authentication, although you could add some parameters like the web driver to be used
+AuthenticationInfo seleniumInfo = AuthenticationInfo.builder()
+        .seleniumDriver("phantomjs").buildSeleniumAuthenticationInfo("http://myapp/login", "username", "password");
+
+// For HTTP authentication, no loginUrl is needed, but the hostname and realm are required
+AuthenticationInfo httpInfo = AuthenticationInfo.builder()
+        .buildHttpAuthenticationInfo("username", "password", "hostname", "realm");
 
 // For CAS authentication, it's also necessary to inform a protected page for each context that will be analyzed
 // This page will be automatically accessed after authentication and before ZAP's scan, avoiding redirections during the scan
@@ -91,7 +101,7 @@ AuthenticationInfo formReauthInfo = AuthenticationInfo.builder()
         .loggedInRegex("\\Q<a href=\"logout.jsp\">Logout</a>\\E")
         .buildFormAuthenticationInfo("http://myapp/login", "username", "password");
 
-// It's possible to define pages that won't be authenticated (useful to exclude logout pages from the scan if re-authentication is not possible)
+// It's possible to define pages that won't be scanned (useful to exclude logout pages from the scan if re-authentication is not possible)
 AuthenticationInfo formExcludeInfo = AuthenticationInfo.builder()
         .excludeFromScan("http://myapp/logout")
         .buildFormAuthenticationInfo("http://myapp/login", "username", "password");
@@ -99,13 +109,15 @@ AuthenticationInfo formExcludeInfo = AuthenticationInfo.builder()
 
 ### AnalysisInfo
 
-This tiny class keeps information related to the analysis:
+This class keeps information related to the analysis:
 
 - `targetUrl`: URL of the application that will be scanned;
+- 
 - `analysisTimeoutInMinutes`: analysis timeout;
-- `analysisType`: analysis type. There are three types available: `WITH_SPIDER`, `WITH_AJAX_SPIDER` e `ACTIVE_SCAN_ONLY`.
+- `analysisType`: analysis type. There are several types available.
+- `shouldStartNewSession`: when true, ZAP will start a new session before the analysis begin.
 
-These types are defined in the [`AnalysisType`](src/main/java/br/com/softplan/security/zap/api/model/AnalysisType.java) enum. `WITH_SPIDER` is the default type, which executes [ZAP's Spider](https://github.com/zaproxy/zap-core-help/wiki/HelpStartConceptsSpider) before the [Active Scan](https://github.com/zaproxy/zap-core-help/wiki/HelpStartConceptsAscan). For applications that rely on AJAX, it might be interesting to execute the available [AJAX Spider](https://github.com/zaproxy/zap-core-help/wiki/HelpAddonsSpiderAjaxConcepts) after the default Spider is executed. The type `WITH_AJAX_SPIDER` defines this strategy. Lastly, `ACTIVE_SCAN_ONLY` executes only the Active Scan. This is useful when the application navigation was done through a proxy with ZAP (via Selenium tests, for instance) and there is no need to run the Spider.
+These types are defined in the [`AnalysisType`](src/main/java/br/com/softplan/security/zap/api/model/AnalysisType.java) enum. `WITH_SPIDER` is the default type, which executes [ZAP's Spider](https://github.com/zaproxy/zap-core-help/wiki/HelpStartConceptsSpider) before the [Active Scan](https://github.com/zaproxy/zap-core-help/wiki/HelpStartConceptsAscan). For applications that rely on AJAX, it might be interesting to execute the available [AJAX Spider](https://github.com/zaproxy/zap-core-help/wiki/HelpAddonsSpiderAjaxConcepts) after the default Spider is executed. The type `WITH_AJAX_SPIDER` defines this strategy. `ACTIVE_SCAN_ONLY` executes only the Active Scan. This is useful when the application navigation was done through a proxy with ZAP (via Selenium tests, for instance) and there is no need to run the Spider. Lastly, there are two options intended to run only the passive scan: `SPIDER_ONLY` and `SPIDER_AND_AJAX_SPIDER_ONLY`.
 
 The `AnalysisInfo` instance is passed to `ZapClient`'s `analyze()` method. Therefore, it's possible to execute different analysis from the same `ZapClient` instance.
 
