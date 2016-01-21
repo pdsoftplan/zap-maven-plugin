@@ -13,7 +13,7 @@
 
 ## Introduction
 
-The ZAP Client API is a project built on top of the [ZAP Java API](https://github.com/zaproxy/zaproxy/wiki/ApiJava). It creates a layer of abstraction over all the calls to ZAP's API, simplifying the configuration and execution process for applications that want to use ZAP. Moreover, the ZAP Client API adds support for [CAS](http://jasig.github.io/cas/) authentication, not supported by default by ZAP or its API.
+The ZAP Client API is a project built on top of the [ZAP Java API](https://github.com/zaproxy/zaproxy/wiki/ApiJava). It creates a layer of abstraction over all the calls to ZAP's API, simplifying the configuration and execution process for applications that want to use ZAP. Moreover, the ZAP Client API adds support for [CAS](http://jasig.github.io/cas/) authentication, not supported by default by ZAP or its API, as well as authentication via [Selenium](http://www.seleniumhq.org/), which can be used on many other complex authentication strategies.
 
 ## Usage
 
@@ -23,7 +23,7 @@ To use the API, just add the following dependency to your project:
 <dependency>
 	<groupId>br.com.softplan.security.zap</groupId>
 	<artifactId>zap-client-api</artifactId>
-	<version>${zap.client.api.version}</version>
+	<version>${zap-client-api.version}</version>
 </dependency>
 ```
 
