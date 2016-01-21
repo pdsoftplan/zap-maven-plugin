@@ -3,6 +3,7 @@ package br.com.softplan.security.zap.api.authentication;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -185,7 +186,7 @@ public abstract class AbstractAuthenticationHandler implements AuthenticationHan
 	}
 	
 	protected void addHttpSessionTokens(String site) {
-		LOGGER.debug("Adding session tokens: {}.", authenticationInfo.getHttpSessionTokens());
+		LOGGER.debug("Adding session tokens: {}.", Arrays.toString(authenticationInfo.getHttpSessionTokens()));
 		
 		try {
 			for (String sessionToken : authenticationInfo.getHttpSessionTokens()) {

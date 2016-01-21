@@ -120,7 +120,7 @@ public class AnalysisInfo {
 		 * @param context an array of URLs (absolute or relative) to be set on ZAP's context.
 		 * @return this {@code Builder} instance.
 		 */
-		public Builder context(String[] context) {
+		public Builder context(String... context) {
 			this.context = context;
 			return this;
 		}

@@ -1,9 +1,5 @@
 package br.com.softplan.security.zap.api.model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -35,7 +31,7 @@ public final class AuthenticationInfo {
 	private String loginRequestData;
 	private String usernameParameter;
 	private String passwordParameter;
-	private List<String> httpSessionTokens;
+	private String[] httpSessionTokens;
 	private SeleniumDriver seleniumDriver;
 	private String hostname;
 	private String realm;
@@ -104,7 +100,7 @@ public final class AuthenticationInfo {
 		return passwordParameter;
 	}
 	
-	public List<String> getHttpSessionTokens() {
+	public String[] getHttpSessionTokens() {
 		return httpSessionTokens;
 	}
 	
@@ -143,7 +139,7 @@ public final class AuthenticationInfo {
 		private String loginRequestData = DEFAULT_LOGIN_REQUEST_DATA;
 		private String usernameParameter = DEFAULT_USERNAME_PARAMETER;
 		private String passwordParameter = DEFAULT_PASSWORD_PARAMETER;
-		private List<String> httpSessionTokens = new ArrayList<>();
+		private String[] httpSessionTokens;
 		private SeleniumDriver seleniumDriver = DEFAULT_SELENIUM_DRIVER;
 		private String hostname;
 		private String realm;
@@ -389,20 +385,7 @@ public final class AuthenticationInfo {
 		 */
 		public Builder httpSessionTokens(String... httpSessionTokens) {
 			if (httpSessionTokens != null) {
-				this.httpSessionTokens = Arrays.asList(httpSessionTokens);
-			}
-			return this;
-		}
-		
-		/**
-		 * Includes additional HTTP session tokens to ZAP.  
-		 * 
-		 * @param httpSessionTokens the session tokens to be added to ZAP.
-		 * @return this {@code Builder} instance.
-		 */
-		public Builder httpSessionTokens(List<String> httpSessionTokens) {
-			if (httpSessionTokens != null) {
-				this.httpSessionTokens = new ArrayList<>(httpSessionTokens);
+				this.httpSessionTokens = httpSessionTokens;
 			}
 			return this;
 		}
