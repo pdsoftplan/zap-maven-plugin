@@ -74,7 +74,7 @@ shouldRunAjaxSpider            | Indicates whether ZAP should execute the [AJAX 
 shouldRunPassiveScanOnly       | In case it's true, the Active Scan will not be executed | No | false
 shouldStartNewSession          | Indicates whether a new session should be started on ZAP before the analysis | No | true
 
-> If both *spiderStartingPoint* and *activeScanStartingPoint* are provided, *targetUrl* will be ignored. These options are useful when you want to spider through the whole application, but want to run the Active Scan for only a portion of it. These parameters, together with the *context* parameter, are very sensitive and should be set accordingly.
+> If the options *spiderStartingPoint*, *activeScanStartingPoint* and *context* are all provided, *targetUrl* will be ignored. These options are useful when you want to spider through the whole application, but want to run the Active Scan for only a portion of it, for instance. These parameters are very sensitive and should be set accordingly.
 
 **ZAP related parameters:**
 
@@ -178,16 +178,11 @@ For this to work, ZAP must already be running.
     <artifactId>zap-maven-plugin</artifactId>
     <version>${zap-maven-plugin.version}</version>
     <configuration>
-        <zapHost>localhost</zapHost>
+        <!-- If ZAP is running on localhost, there is no need to define zapHost -->
+        <zapHost>10.10.3.4</zapHost>
         <zapPort>8080</zapPort>
         <targetUrl>http://localhost:8090/testwebapp</targetUrl>
     </configuration>
-    <executions>
-        <execution>
-            <phase>verify</phase>
-            <goals><goal>analyze</goal></goals>
-        </execution>
-    </executions>
 </plugin>
 ```
 
@@ -199,18 +194,12 @@ For ZAP to be automatically started, the option *zapPath* must be provided with 
 <plugin>
 	<groupId>br.com.softplan.security.zap</groupId>
 	<artifactId>zap-maven-plugin</artifactId>
-	<version>${zap.maven.plugin.version}</version>
+	<version>${zap-maven-plugin.version}</version>
 	<configuration>
 		<zapPort>8080</zapPort>
 		<targetUrl>http://localhost:8090/testwebapp</targetUrl>
 		<zapPath>C:\Program Files (x86)\OWASP\Zed Attack Proxy</zapPath>
 	</configuration>
-	<executions>
-		<execution>
-			<phase>verify</phase>
-			<goals><goal>analyze</goal></goals>
-		</execution>
-	</executions>
 </plugin>
 ```
 
@@ -224,18 +213,12 @@ If ZAP is not installed, you can still start ZAP with Docker. For this, Docker m
 <plugin>
 	<groupId>br.com.softplan.security.zap</groupId>
 	<artifactId>zap-maven-plugin</artifactId>
-	<version>${zap.maven.plugin.version}</version>
+	<version>${zap-maven-plugin.version}</version>
 	<configuration>
 		<zapPort>8080</zapPort>
 		<targetUrl>http://localhost:8090/testwebapp</targetUrl>
 		<shouldRunWithDocker>true</shouldRunWithDocker>
 	</configuration>
-	<executions>
-		<execution>
-			<phase>verify</phase>
-			<goals><goal>analyze</goal></goals>
-		</execution>
-	</executions>
 </plugin>
 ```
 
@@ -245,9 +228,8 @@ If ZAP is not installed, you can still start ZAP with Docker. For this, Docker m
 <plugin>
 	<groupId>br.com.softplan.security.zap</groupId>
 	<artifactId>zap-maven-plugin</artifactId>
-	<version>${zap.maven.plugin.version}</version>
+	<version>${zap-maven-plugin.version}</version>
 	<configuration>
-		<zapHost>localhost</zapHost>
     	<zapPort>8080</zapPort>
 		<targetUrl>http://localhost:8180/bodgeit</targetUrl>
 
@@ -257,12 +239,6 @@ If ZAP is not installed, you can still start ZAP with Docker. For this, Docker m
 		<loginUrl>http://localhost:8180/bodgeit/login.jsp</loginUrl>
 		<loggedInRegex><![CDATA[\\Q<a href=\"logout.jsp\">Logout</a>\\E]]></loggedInRegex>
 	</configuration>
-	<executions>
-		<execution>
-			<phase>verify</phase>
-			<goals><goal>analyze</goal></goals>
-		</execution>
-	</executions>
 </plugin>
 ```
 
@@ -274,9 +250,8 @@ If ZAP is not installed, you can still start ZAP with Docker. For this, Docker m
 <plugin>
 	<groupId>br.com.softplan.security.zap</groupId>
 	<artifactId>zap-maven-plugin</artifactId>
-	<version>${zap.maven.plugin.version}</version>
+	<version>${zap-maven-plugin.version}</version>
 	<configuration>
-		<zapHost>localhost</zapHost>
 		<zapPort>8080</zapPort>
 		<targetUrl>https://localhost:8443/myapp</targetUrl>
 
@@ -289,12 +264,29 @@ If ZAP is not installed, you can still start ZAP with Docker. For this, Docker m
         </protectedPages>
         <loggedOutRegex><![CDATA[\\QLocation: https://localhost:8443/cas-server/\\E.*]]></loggedOutRegex>
 	</configuration>
-	<executions>
-		<execution>
-			<phase>verify</phase>
-			<goals><goal>analyze</goal></goals>
-		</execution>
-	</executions>
+</plugin>
+```
+
+### Selenium authentication example
+
+```xml
+<plugin>
+	<groupId>br.com.softplan.security.zap</groupId>
+	<artifactId>zap-maven-plugin</artifactId>
+	<version>${zap-maven-plugin.version}</version>
+	<configuration>
+		<zapPort>8080</zapPort>
+		<targetUrl>http://localhost:8090/testwebapp</targetUrl>
+
+        <authenticationType>selenium</authenticationType>
+        <username>user</username>
+        <password>pass</password>
+        <loginUrl>http://localhost:8090/testwebapp/login</loginUrl>
+        <httpSessionTokens>
+            <token>LtpaToken2</token>
+        </httpSessionTokens>
+        <seleniumDriver>phantomjs</seleniumDriver>
+	</configuration>
 </plugin>
 ```
 
@@ -338,7 +330,7 @@ With that done, all that remains are the plugin goals configuration:
 <plugin>
     <groupId>br.com.softplan.security.zap</groupId>
     <artifactId>zap-maven-plugin</artifactId>
-    <version>${zap.maven.plugin.version}</version>
+    <version>${zap-maven-plugin.version}</version>
     <configuration>
 		<!-- whatever configuration -->
 	</configuration>
