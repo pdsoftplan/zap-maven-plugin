@@ -109,13 +109,15 @@ AuthenticationInfo formExcludeInfo = AuthenticationInfo.builder()
 
 ### AnalysisInfo
 
-This class keeps information related to the analysis:
+This class keeps information related to the analysis. 
 
 - `targetUrl`: URL of the application that will be scanned;
-- 
+- `spiderStartingPointUrl`: starting point URL for the Spider (and AJAX Spider, in case it runs);
+- `activeScanStartingPointUrl`: starting point URL for the Active Scan;
+- `context`: the context URLs to be set on ZAP (absolute or relative);
 - `analysisTimeoutInMinutes`: analysis timeout;
+- `shouldStartNewSession`: indicates whether a new session should be started on ZAP before the analysis;
 - `analysisType`: analysis type. There are several types available.
-- `shouldStartNewSession`: when true, ZAP will start a new session before the analysis begin.
 
 These types are defined in the [`AnalysisType`](src/main/java/br/com/softplan/security/zap/api/model/AnalysisType.java) enum. `WITH_SPIDER` is the default type, which executes [ZAP's Spider](https://github.com/zaproxy/zap-core-help/wiki/HelpStartConceptsSpider) before the [Active Scan](https://github.com/zaproxy/zap-core-help/wiki/HelpStartConceptsAscan). For applications that rely on AJAX, it might be interesting to execute the available [AJAX Spider](https://github.com/zaproxy/zap-core-help/wiki/HelpAddonsSpiderAjaxConcepts) after the default Spider is executed. The type `WITH_AJAX_SPIDER` defines this strategy. `ACTIVE_SCAN_ONLY` executes only the Active Scan. This is useful when the application navigation was done through a proxy with ZAP (via Selenium tests, for instance) and there is no need to run the Spider. Lastly, there are two options intended to run only the passive scan: `SPIDER_ONLY` and `SPIDER_AND_AJAX_SPIDER_ONLY`.
 
