@@ -150,7 +150,7 @@ public final class AuthenticationInfo {
 		 * 
 		 * @param hostname the host name for HTTP authentication.
 		 * @param realm the realm for HTTP authentication.
-		 * @return the built {@link AuthenticationInfo} instance.
+		 * @return the built {@code AuthenticationInfo} instance.
 		 */
 		public AuthenticationInfo buildHttpAuthenticationInfo(String username, String password, String hostname, String realm) {
 			return type(AuthenticationType.HTTP)
@@ -167,7 +167,7 @@ public final class AuthenticationInfo {
 		 * @param loginUrl the login URL (i.e. {@code http://myapp.com/login}).
 		 * @param username the username that will be authenticated.
 		 * @param password the user's password.
-		 * @return the built {@link AuthenticationInfo} instance.
+		 * @return the built {@code AuthenticationInfo} instance.
 		 */
 		public AuthenticationInfo buildFormAuthenticationInfo(String loginUrl, String username, String password) {
 			return type(AuthenticationType.FORM)
@@ -187,7 +187,7 @@ public final class AuthenticationInfo {
 		 * @param username the username that will be authenticated.
 		 * @param password the user's password.
 		 * @param protectedPages an array of URLs with at least one protected page for each context that will be analyzed.
-		 * @return the built {@link AuthenticationInfo} instance.
+		 * @return the built {@code AuthenticationInfo} instance.
 		 */
 		public AuthenticationInfo buildCasAuthenticationInfo(String loginUrl, String username, String password, String... protectedPages) {
 			return type(AuthenticationType.CAS)
@@ -199,9 +199,25 @@ public final class AuthenticationInfo {
 		}
 		
 		/**
+		 * Builds an {@code AuthenticationInfo} instance with the minimum information required for Selenium authentication.
+		 * 
+		 * @param loginUrl the login URL (i.e. {@code http://myapp.com/login}).
+		 * @param username the username that will be authenticated.
+		 * @param password the user's password.
+		 * @return the built {@code AuthenticationInfo} instance.
+		 */
+		public AuthenticationInfo buildSeleniumAuthenticationInfo(String loginUrl, String username, String password) {
+			return type(AuthenticationType.SELENIUM)
+					.loginUrl(loginUrl)
+					.username(username)
+					.password(password)
+					.build();
+		}
+		
+		/**
 		 * Sets the {@link AuthenticationType}.
 		 * 
-		 * @param type the {@link AuthenticationType} ({@code CAS}, {@code FORM} or {@code SELENIUM}).
+		 * @param type the {@link AuthenticationType} ({@code HTTP}, {@code CAS}, {@code FORM} or {@code SELENIUM}).
 		 * @return this {@code Builder} instance.
 		 */
 		public Builder type(AuthenticationType type) {
@@ -212,7 +228,7 @@ public final class AuthenticationInfo {
 		/**
 		 * Sets the {@link AuthenticationType}.
 		 * 
-		 * @param type the {@link AuthenticationType} as a string ({@code CAS}, {@code FORM} or {@code SELENIUM}, case-insensitive).
+		 * @param type the {@link AuthenticationType} as a string ({@code HTTP}, {@code CAS}, {@code FORM} or {@code SELENIUM}, case-insensitive).
 		 * @return this {@code Builder} instance.
 		 */
 		public Builder type(String type) {
@@ -326,6 +342,8 @@ public final class AuthenticationInfo {
 			this.protectedPages = protectedPages;
 			if (protectedPages != null) {
 				protectedPagesSeparatedByComma = StringUtils.join(protectedPages, ","); 
+			} else {
+				protectedPagesSeparatedByComma = null;
 			}
 			return this;
 		}
@@ -448,9 +466,9 @@ public final class AuthenticationInfo {
 		}
 		
 		/**
-		 * Validates and builds an {@link AuthenticationInfo} instance based on the builder parameters.
+		 * Validates and builds an {@code AuthenticationInfo} instance based on the builder parameters.
 		 * 
-		 * @return a {@link AuthenticationInfo} instance.
+		 * @return a {@code AuthenticationInfo} instance.
 		 */
 		public AuthenticationInfo build() {
 			AuthenticationInfo authenticationInfo = new AuthenticationInfo(this);
