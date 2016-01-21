@@ -1,6 +1,6 @@
 # ZAP Utils
 
-This module is responsible for the automatic initialization of ZAP (via local installation or Docker). It also centralizes some definitions regarding the CAS authentication script used within the project.
+This module is responsible for the automatic initialization of ZAP (via local installation or Docker).
 
 To start ZAP, simply create a `ZapInfo` instance through its builder and call `Zap.startZap(zapInfo)`:
 
