@@ -136,9 +136,11 @@ passwordParameter  | Name of the request parameter that holds the password | No 
 Parameter | Description | Required? | Default
 --- | --- | --- | ---
 httpSessionTokens  | Any additional session tokens that should be added to ZAP prior authentication | No | -
-seleniumDriver     | The web driver that will be used to perform authentication: 'html_unit', 'firefox' or 'chrome' | No | firefox
+seleniumDriver     | The web driver that will be used to perform authentication: 'html_unit', 'firefox', or 'phantomjs' | No | firefox
 
-> It's important to realize that the `HtmlUnitDriver` lacks complete support for JavaScript. Therefore, it might not always work properly.
+>
+- It's important to realize that the `HtmlUnitDriver` lacks complete support for JavaScript. Therefore, it might not always work properly. If a GUI is not available, prefer to use [PhantomJS](http://phantomjs.org/).
+- When using PhantomJS, make sure its executable is in the system's path.
 
 Notice that the parameters *context*, *excludeFromScan*, *protectedPages* and *httpSessionTokens* accept multiple values, like in the example below:
 
