@@ -9,13 +9,11 @@ import java.net.URISyntaxException;
 
 import org.apache.commons.io.IOUtils;
 
+import br.com.softplan.security.zap.commons.authentication.AuthenticationScripts;
+import br.com.softplan.security.zap.commons.boot.ZapDockerBoot;
+
 public class AuthenticationScript {
 
-	private static final String JAVASCRIPT_FILE_EXTENSION = ".js";
-	
-	public  static final String SCRIPT_RELATIVE_PATH = "/scripts/";
-	public  static final String SCRIPT_DEFAULT_DOCKER_PATH = "/zap/scripts/";
-	
 	private String name;
 	private String description;
 	private String fileName;
@@ -27,8 +25,8 @@ public class AuthenticationScript {
 	public AuthenticationScript(String name, String description) {
 		this.name = name;
 		this.description = description;
-		this.fileName = name + JAVASCRIPT_FILE_EXTENSION;
-		this.relativePath = SCRIPT_RELATIVE_PATH + name + JAVASCRIPT_FILE_EXTENSION;
+		this.fileName = name + AuthenticationScripts.EXTENSION;
+		this.relativePath = AuthenticationScripts.RELATIVE_PATH + fileName;
 		
 		this.path = AuthenticationScript.class.getResource(relativePath).getPath();
 	}
@@ -51,7 +49,7 @@ public class AuthenticationScript {
 
 	public String getPath(boolean isZapRunningOnDocker) throws IOException, URISyntaxException {
 		if (isZapRunningOnDocker) {
-			return SCRIPT_DEFAULT_DOCKER_PATH + fileName;
+			return ZapDockerBoot.CAS_AUTH_SCRIPT_DEFAULT_DOCKER_PATH + fileName;
 		}
 		if (scriptFileIsNotAccessible()) {
 			return getCasAuthScriptTempFile().getAbsolutePath();
@@ -71,7 +69,7 @@ public class AuthenticationScript {
 	}
 	
 	private File createCasAuthScriptTempFile() throws IOException {
-		File tempFile = File.createTempFile(name, JAVASCRIPT_FILE_EXTENSION);
+		File tempFile = File.createTempFile(name, AuthenticationScripts.EXTENSION);
 		tempFile.deleteOnExit();
 		
 		InputStream casAuthScriptInputStream = AuthenticationScript.class.getResourceAsStream(relativePath);

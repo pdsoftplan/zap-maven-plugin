@@ -8,7 +8,7 @@ import br.com.softplan.security.zap.commons.ZapInfo;
  * 
  * @author pdsec
  */
-final class ZapBootFactory {
+public final class ZapBootFactory {
 
 	static ZapBoot makeZapBoot(ZapInfo zapInfo) {
 		if (zapInfo.shouldRunWithDocker()) {

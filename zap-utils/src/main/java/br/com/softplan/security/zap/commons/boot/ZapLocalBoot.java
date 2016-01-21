@@ -21,7 +21,7 @@ import br.com.softplan.security.zap.commons.exception.ZapInitializationException
  * 
  * @author pdsec
  */
-class ZapLocalBoot extends AbstractZapBoot {
+public class ZapLocalBoot extends AbstractZapBoot {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ZapLocalBoot.class);
 	

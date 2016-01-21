@@ -8,7 +8,7 @@ import br.com.softplan.security.zap.commons.ZapInfo;
  * 
  * @author pdsec
  */
-interface ZapBoot {
+public interface ZapBoot {
 
 	/**
 	 * Starts ZAP.

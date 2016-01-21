@@ -12,7 +12,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import br.com.softplan.security.zap.api.model.AuthenticationInfo;
 import br.com.softplan.security.zap.commons.ZapInfo;
 
-public class WebDriverFactory {
+public final class WebDriverFactory {
 
 	private static final int FIREFOX_MANUAL_PROXY_CONFIGURATION_OPTION = 1;
 	

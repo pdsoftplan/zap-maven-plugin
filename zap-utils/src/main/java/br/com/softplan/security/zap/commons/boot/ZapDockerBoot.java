@@ -1,9 +1,5 @@
 package br.com.softplan.security.zap.commons.boot;
 
-import static br.com.softplan.security.zap.commons.cas.CasAuthenticationScriptConstants.CAS_AUTH_SCRIPT_DEFAULT_DOCKER_PATH;
-import static br.com.softplan.security.zap.commons.cas.CasAuthenticationScriptConstants.CAS_AUTH_SCRIPT_FILE_NAME;
-import static br.com.softplan.security.zap.commons.cas.CasAuthenticationScriptConstants.CAS_AUTH_SCRIPT_RELATIVE_PATH;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -16,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import br.com.softplan.security.zap.commons.ZapInfo;
+import br.com.softplan.security.zap.commons.authentication.AuthenticationScripts;
 
 /**
  * Class responsible to start and stop ZAP by running ZAP's Docker image.
@@ -26,12 +23,15 @@ import br.com.softplan.security.zap.commons.ZapInfo;
  * 
  * @author pdsec
  */
-class ZapDockerBoot extends AbstractZapBoot {
+public class ZapDockerBoot extends AbstractZapBoot {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ZapDockerBoot.class);
 	
 	private static final String DEFAULT_DOCKER_COMMAND = "docker run --rm";
 	private static final String ZAP_IMAGE_OPTION = " -i owasp/zap2docker-stable zap.sh ";
+	
+	public  static final String CAS_AUTH_SCRIPT_DEFAULT_DOCKER_PATH = "/zap/scripts/";
+	private static final String CAS_AUTH_SCRIPT_FILE_NAME = "cas-auth.js";
 	
 	private static Process zap;
 	
@@ -58,7 +58,7 @@ class ZapDockerBoot extends AbstractZapBoot {
 		
 		File scriptFile = new File(CAS_AUTH_SCRIPT_DEFAULT_DOCKER_PATH, CAS_AUTH_SCRIPT_FILE_NAME);
 		
-		InputStream casAuthScriptInputStream = ZapDockerBoot.class.getResourceAsStream(CAS_AUTH_SCRIPT_RELATIVE_PATH);
+		InputStream casAuthScriptInputStream = ZapDockerBoot.class.getResourceAsStream(AuthenticationScripts.RELATIVE_PATH + CAS_AUTH_SCRIPT_FILE_NAME);
 		try (FileOutputStream fileOutputStream = new FileOutputStream(scriptFile)) {
 			IOUtils.copy(casAuthScriptInputStream, fileOutputStream);
 		} catch (IOException e) {

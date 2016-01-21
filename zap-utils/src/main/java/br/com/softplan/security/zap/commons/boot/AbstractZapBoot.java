@@ -16,7 +16,7 @@ import br.com.softplan.security.zap.commons.exception.ZapInitializationTimeoutEx
  * 
  * @author pdsec
  */
-abstract class AbstractZapBoot implements ZapBoot {
+public abstract class AbstractZapBoot implements ZapBoot {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractZapBoot.class);
 	
