@@ -29,10 +29,6 @@ public final class WebDriverFactory {
 		}
 	}
 	
-	public static void main(String[] args) {
-		new ChromeDriver();
-	}
-	
 	public static HtmlUnitDriver makeHtmlUnitDriver(String host, int port) {
 		HtmlUnitDriver driver = new HtmlUnitDriver();
 		driver.setProxy(host, port);
