@@ -323,7 +323,8 @@ public class ClientApiMain {
                             "2. Type 'java -jar zap-api.jar addIncludeOneMatchingNodeToContext url=http://myurl.com/' zapaddr=192.168.1.1 zapport=7080' \n\t\t" +
                             "The first url from the current session that matches the regex will be included in scope using context '1'. Any other matching url will be excluded from scope using context '1' using zap listening on 192.168.1.1:7080\n\t";
                     break;
-                default: break;
+			default:
+				break;
             }
         }
         System.out.println(help);

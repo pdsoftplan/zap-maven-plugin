@@ -57,7 +57,7 @@ public abstract class BaseAnalyzer implements Analyzer {
 		LOGGER.info("{} : {}", ScanType.SPIDER, targetUrl);
 
 		try {
-			ApiResponse resp = api.spider.scan(apiKey, targetUrl, "", ""/*, ""*/);
+			ApiResponse resp = api.spider.scan(apiKey, targetUrl, "", "", "");
 			String scanId = ((ApiResponseElement) resp).getValue();
 
 			waitForScanToFinish(scanId, ScanType.SPIDER);
