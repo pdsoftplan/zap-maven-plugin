@@ -3,6 +3,8 @@ package br.com.softplan.security.zap.api.authentication;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import br.com.softplan.security.zap.api.model.AuthenticationInfo;
 import br.com.softplan.security.zap.commons.ZapInfo;
@@ -19,6 +21,8 @@ import br.com.softplan.security.zap.zaproxy.clientapi.core.ClientApi;
  */
 public class SeleniumAuthenticationHandler extends AbstractAuthenticationHandler {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(SeleniumAuthenticationHandler.class);
+	
 	protected SeleniumAuthenticationHandler(ClientApi api, ZapInfo zapInfo, AuthenticationInfo authenticationInfo) {
 		super(api, zapInfo, authenticationInfo);
 	}
@@ -32,6 +36,7 @@ public class SeleniumAuthenticationHandler extends AbstractAuthenticationHandler
 	
 	private void triggerAuthenticationViaWebDriver() {
 		AuthenticationInfo authenticationInfo = getAuthenticationInfo();
+		LOGGER.info("--- Performing authentication via Selenium ({}) ---", authenticationInfo.getSeleniumDriver());
 		
 		WebDriver driver = WebDriverFactory.makeWebDriver(getZapInfo(), authenticationInfo);
 		driver.get(authenticationInfo.getLoginUrl());
@@ -41,9 +46,11 @@ public class SeleniumAuthenticationHandler extends AbstractAuthenticationHandler
 		
 		WebElement passwordField = driver.findElement(By.id(authenticationInfo.getPasswordParameter()));
 		passwordField.sendKeys(authenticationInfo.getPassword());
+		
 		passwordField.submit();
 		
 		driver.quit();
+		LOGGER.info("--- Finished performing authentication via Selenium ---\n");
 	}
 	
 }

@@ -21,6 +21,7 @@ public final class AuthenticationInfoValidator {
 	
 	public static void validate(AuthenticationInfo info) {
 		LOGGER.info("--- Validating authentication information ---");
+		LOGGER.info("Authentication information provided: {}", info);
 		if (info == null) {
 			String message = "AuthenticationInfo cannot be null.";
 			LOGGER.error(message);
