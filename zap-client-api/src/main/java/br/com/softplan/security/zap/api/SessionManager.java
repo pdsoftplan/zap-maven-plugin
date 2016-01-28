@@ -22,7 +22,7 @@ public class SessionManager {
 	private int sessionId;
 	
 	public void createNewSession(ClientApi api, String apiKey) {
-		createNewSession(api, "zap-session-" + sessionId++, true);
+		createNewSession(api, apiKey, true);
 	}
 	
 	public void createNewSession(ClientApi api, String apiKey, boolean overwrite) {
