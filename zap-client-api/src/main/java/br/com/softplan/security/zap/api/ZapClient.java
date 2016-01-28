@@ -56,6 +56,7 @@ public class ZapClient {
 		}
 
 		ZapHelper.includeInContext(api, apiKey, analysisInfo);
+		ZapHelper.setTechnologiesInContext(api, apiKey, analysisInfo);
 		
 		if (authenticationHandler != null) {
 			authenticationHandler.handleAuthentication(analysisInfo.getTargetUrl());

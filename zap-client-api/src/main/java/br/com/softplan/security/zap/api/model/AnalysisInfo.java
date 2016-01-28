@@ -3,6 +3,7 @@ package br.com.softplan.security.zap.api.model;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -21,6 +22,8 @@ public class AnalysisInfo {
 	private String spiderStartingPointUrl;
 	private String activeScanStartingPointUrl;
 	private String[] context;
+	private String[] technologies;
+	private String technologiesSeparatedByComma;
 	
 	private long analysisTimeoutInMinutes;
 	private AnalysisType analysisType;
@@ -55,6 +58,14 @@ public class AnalysisInfo {
 		return new String[]{targetUrl};
 	}
 
+	public String[] getTechnologies() {
+		return technologies;
+	}
+	
+	public String getTechnologiesSeparatedByComma() {
+		return technologiesSeparatedByComma;
+	}
+	
 	public long getAnalysisTimeoutInMillis() {
 		return TimeUnit.MILLISECONDS.convert(analysisTimeoutInMinutes, TimeUnit.MINUTES);
 	}
@@ -77,6 +88,8 @@ public class AnalysisInfo {
 		private String spiderStartingPointUrl;
 		private String activeScanStartingPointUrl;
 		private String[] context;
+		private String[] technologies;
+		private String technologiesSeparatedByComma;
 		private long analysisTimeoutInMinutes = DEFAULT_ANALYSIS_TIMEOUT_IN_MINUTES;
 		private AnalysisType analysisType = DEFAULT_ANALYSIS_TYPE;
 		private boolean shouldStartNewSession = DEFAULT_SHOULD_START_NEW_SESSION;
@@ -122,6 +135,23 @@ public class AnalysisInfo {
 		 */
 		public Builder context(String... context) {
 			this.context = context;
+			return this;
+		}
+		
+		/**
+		 * Sets the technologies that will be considered during the scan.
+		 * The default behavior is to consider all the technologies.
+		 * 
+		 * @param technologies an array of technologies to be considered during the scan.
+		 * @return this {@code Builder} instance.
+		 */
+		public Builder technologies(String... technologies) {
+			this.technologies = technologies;
+			if (technologies != null) {
+				technologiesSeparatedByComma = StringUtils.join(technologies, ","); 
+			} else {
+				technologiesSeparatedByComma = null;
+			}
 			return this;
 		}
 		
@@ -204,13 +234,15 @@ public class AnalysisInfo {
 	}
 	
 	private AnalysisInfo(Builder builder) {
-		this.targetUrl                  = builder.targetUrl;
-		this.spiderStartingPointUrl     = builder.spiderStartingPointUrl;
-		this.activeScanStartingPointUrl = builder.activeScanStartingPointUrl;
-		this.context                    = builder.context;
-		this.analysisTimeoutInMinutes   = builder.analysisTimeoutInMinutes;
-		this.analysisType               = builder.analysisType;
-		this.shouldStartNewSession      = builder.shouldStartNewSession;
+		this.targetUrl                    = builder.targetUrl;
+		this.spiderStartingPointUrl       = builder.spiderStartingPointUrl;
+		this.activeScanStartingPointUrl   = builder.activeScanStartingPointUrl;
+		this.context                      = builder.context;
+		this.technologies                 = builder.technologies;
+		this.technologiesSeparatedByComma = builder.technologiesSeparatedByComma;
+		this.analysisTimeoutInMinutes     = builder.analysisTimeoutInMinutes;
+		this.analysisType                 = builder.analysisType;
+		this.shouldStartNewSession        = builder.shouldStartNewSession;
 	}
 	
 	@Override
@@ -219,8 +251,9 @@ public class AnalysisInfo {
 				.append("targetUrl", targetUrl)
 				.append("spiderStartingPointUrl", spiderStartingPointUrl)
 				.append("activeScanStartingPointUrl", activeScanStartingPointUrl)
-				.append("analysisTimeoutInMinutes", analysisTimeoutInMinutes)
 				.append("context", Arrays.toString(context))
+				.append("technologies", Arrays.toString(technologies))
+				.append("analysisTimeoutInMinutes", analysisTimeoutInMinutes)
 				.append("analysisType", analysisType)
 				.append("shouldStartNewSession", shouldStartNewSession)
 				.toString();
