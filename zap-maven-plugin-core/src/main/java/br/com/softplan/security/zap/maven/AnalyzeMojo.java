@@ -4,13 +4,6 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 
-import br.com.softplan.security.zap.api.ZapClient;
-import br.com.softplan.security.zap.api.model.AnalysisInfo;
-import br.com.softplan.security.zap.api.model.AuthenticationInfo;
-import br.com.softplan.security.zap.api.report.ZapReport;
-import br.com.softplan.security.zap.commons.ZapInfo;
-import br.com.softplan.security.zap.commons.boot.Zap;
-
 /**
  * Goal to execute a full analysis with ZAP.
  * <p>
@@ -21,7 +14,8 @@ import br.com.softplan.security.zap.commons.boot.Zap;
 @Mojo(name="analyze")
 public class AnalyzeMojo extends ZapMojo {
 	
-	public void execute() throws MojoExecutionException, MojoFailureException {
+	@Override
+	public void doExecute() throws MojoExecutionException, MojoFailureException {
 		getLog().info("Starting ZAP analysis at target: " + getTargetUrl());
 		
 		ZapInfo zapInfo = buildZapInfo();

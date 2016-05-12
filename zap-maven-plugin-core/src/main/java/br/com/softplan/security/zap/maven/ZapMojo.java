@@ -3,15 +3,9 @@ package br.com.softplan.security.zap.maven;
 import java.io.File;
 
 import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
-
-import br.com.softplan.security.zap.api.model.AnalysisInfo;
-import br.com.softplan.security.zap.api.model.AnalysisType;
-import br.com.softplan.security.zap.api.model.AuthenticationInfo;
-import br.com.softplan.security.zap.api.model.SeleniumDriver;
-import br.com.softplan.security.zap.api.report.ZapReport;
-import br.com.softplan.security.zap.api.report.ZapReportUtil;
-import br.com.softplan.security.zap.commons.ZapInfo;
 
 /**
  * Abstract Mojo used as a base for the other ZAP Mojos. 
@@ -20,6 +14,12 @@ import br.com.softplan.security.zap.commons.ZapInfo;
  */
 public abstract class ZapMojo extends AbstractMojo {
 	
+	// Common
+	/**
+     * Disables the plug-in execution.
+     */
+    @Parameter( property = "zap.skip", defaultValue = "false") private boolean skip;
+    
 	// Analysis
 	@Parameter(required=true) private String targetUrl;
 	@Parameter private String spiderStartingPointUrl;
@@ -143,5 +143,17 @@ public abstract class ZapMojo extends AbstractMojo {
 	protected String getTargetUrl() {
 		return this.targetUrl;
 	}
+	
+	@Override
+	public final void execute() throws MojoExecutionException, MojoFailureException {
+		if (skip) {
+            getLog().info( "Zap is skipped." );
+            return;
+        }
+		
+		doExecute();
+	}
+	
+	public abstract void doExecute() throws MojoExecutionException, MojoFailureException;
 	
 }

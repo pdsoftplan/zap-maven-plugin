@@ -62,6 +62,11 @@ The goals that run analysis save the generated reports in the end of the plugin 
 
 ## Configuration Parameters
 
+**Common parameters:**
+Parameter | Description | Required? | Default
+--- | --- | --- | ---
+skip                           | Skip the plugin execution (equivalent CLI property: zap.skip)        | No  | false
+
 **Analysis parameters:**
 
 Parameter | Description | Required? | Default

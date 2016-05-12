@@ -4,8 +4,6 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 
-import br.com.softplan.security.zap.commons.boot.Zap;
-
 /**
  * Starts ZAP.
  * <p>
@@ -23,7 +21,7 @@ import br.com.softplan.security.zap.commons.boot.Zap;
 public class StartZapMojo extends ZapMojo {
 
 	@Override
-	public void execute() throws MojoExecutionException, MojoFailureException {
+	public void doExecute() throws MojoExecutionException, MojoFailureException {
 		Zap.startZap(buildZapInfo());
 	}
 	
