@@ -85,16 +85,45 @@ public class ZapLocalBoot extends AbstractZapBoot {
 
 	private static String retrieveZapJarName(String path) throws IOException {
 		Path zapPath = Paths.get(path);
+		if (isJarFile(zapPath)) {
+			String filename = zapPath.getFileName().toString();
+			LOGGER.debug("ZapPath points to the Jar file {}", filename);
+			return filename;
+		}
+		
+		LOGGER.debug("ZapPath points to the folder {}", zapPath.getFileName().toString());
+		
 		for (Path p : Files.newDirectoryStream(zapPath)) {
-			Path fileName = p.getFileName();
-			if (fileName == null) {
-				continue;
-			}
-			if (Files.isRegularFile(p) && fileName.toString().endsWith(".jar")) {
-				return fileName.toString();
+			if (isJarFile(p)) {
+				String filename = p.getFileName().toString();
+				LOGGER.debug("Chosen Zap Jar file {}", filename);
+				return filename;
 			}
 		}
+		
 		throw new ZapInitializationException("ZAP's JAR file was not found.");
+	}
+	
+	private static boolean isJarFile(Path path) {
+		if (path == null) {
+			return false;
+		}
+		
+		if (!Files.isRegularFile(path)) {
+			return false;
+		}
+		
+		Path fileName = path.getFileName();
+		
+		if (fileName == null) {
+			return false;
+		}
+		
+		if (fileName.toString().endsWith(".jar")) {
+			return true;
+		}
+
+		return false;
 	}
 	
 }
