@@ -57,7 +57,7 @@ public class ZapLocalBoot extends AbstractZapBoot {
 	private static void start(ZapInfo zapInfo) throws IOException {
 		String startCommand = buildStartCommand(zapInfo);
 		ProcessBuilder processBuilder = new ProcessBuilder(startCommand.split(" +"));
-		processBuilder.directory(new File(zapInfo.getPath()));
+		processBuilder.directory(getZapWorkingDirectory(zapInfo));
 		
 		Files.createDirectories(Paths.get(DEFAULT_ZAP_LOG_PATH));
 		processBuilder.redirectOutput(new File(DEFAULT_ZAP_LOG_PATH, DEFAULT_ZAP_LOG_FILE_NAME));
@@ -124,6 +124,20 @@ public class ZapLocalBoot extends AbstractZapBoot {
 		}
 
 		return false;
+	}
+	
+	private static File getZapWorkingDirectory(ZapInfo zapInfo) {
+		String fullPath = zapInfo.getPath();
+		File dir = new File(fullPath);
+		if (dir.isDirectory()) {
+			return dir;
+		}
+		
+		if (dir.isFile()) {
+			return dir.getParentFile();
+		}
+		
+		return new File(System.getProperty("user.dir"));
 	}
 	
 }
