@@ -7,6 +7,14 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
 
+import br.com.softplan.security.zap.api.model.AnalysisInfo;
+import br.com.softplan.security.zap.api.model.AnalysisType;
+import br.com.softplan.security.zap.api.model.AuthenticationInfo;
+import br.com.softplan.security.zap.api.model.SeleniumDriver;
+import br.com.softplan.security.zap.api.report.ZapReport;
+import br.com.softplan.security.zap.api.report.ZapReportUtil;
+import br.com.softplan.security.zap.commons.ZapInfo;
+
 /**
  * Abstract Mojo used as a base for the other ZAP Mojos. 
  * 

@@ -4,6 +4,14 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 
+import br.com.softplan.security.zap.api.ZapClient;
+import br.com.softplan.security.zap.api.model.AnalysisInfo;
+import br.com.softplan.security.zap.api.model.AnalysisType;
+import br.com.softplan.security.zap.api.model.AuthenticationInfo;
+import br.com.softplan.security.zap.api.report.ZapReport;
+import br.com.softplan.security.zap.commons.ZapInfo;
+import br.com.softplan.security.zap.commons.boot.Zap;
+
 /**
  * Run ZAP's Active Scan and generates the reports. <b>No Spider is executed.</b>
  * This scan assumes that integration tests ran using ZAP as a proxy, so the Active Scan

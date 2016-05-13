@@ -4,6 +4,8 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 
+import br.com.softplan.security.zap.commons.boot.Zap;
+
 /**
  * Starts ZAP.
  * <p>
