@@ -21,7 +21,8 @@ import br.com.softplan.security.zap.commons.boot.Zap;
 @Mojo(name="analyze")
 public class AnalyzeMojo extends ZapMojo {
 	
-	public void execute() throws MojoExecutionException, MojoFailureException {
+	@Override
+	public void doExecute() throws MojoExecutionException, MojoFailureException {
 		getLog().info("Starting ZAP analysis at target: " + getTargetUrl());
 		
 		ZapInfo zapInfo = buildZapInfo();

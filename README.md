@@ -62,6 +62,11 @@ The goals that run analysis save the generated reports in the end of the plugin 
 
 ## Configuration Parameters
 
+**Common parameters:**
+Parameter | Description | Required? | Default
+--- | --- | --- | ---
+skip                           | Skip the plugin execution (equivalent CLI property: zap.skip)        | No  | false
+
 **Analysis parameters:**
 
 Parameter | Description | Required? | Default
@@ -90,7 +95,7 @@ zapOptions           | Options that will be used to automatically start ZAP     
 initializationTimeoutInMillis | ZAP's automatic initialization timeout in milliseconds    | No  | 120
 reportPath  | Absolute or relative path where the generated reports will be saved         | No  | ${user.dir}/target/zapReports
 
-> To automatically start ZAP, it must be installed locally and the option *zapPath* must be provided. To start ZAP with Docker, Docker must be locally installed and the option *shouldRunWithDocker* must be passed as *true*. In both cases, by default, ZAP is initialized with the following options:
+> To automatically start ZAP, it must be installed locally and the option *zapPath* must be provided. If the installation folder contains more than one Jar, *zapPath* should point to the core Jar file. To start ZAP with Docker, Docker must be locally installed and the option *shouldRunWithDocker* must be passed as *true*. In both cases, by default, ZAP is initialized with the following options:
 > ```
 > -daemon -config api.disablekey=true -config api.incerrordetails=true -config proxy.ip=0.0.0.0 -port ${zapPort}
 > ```
