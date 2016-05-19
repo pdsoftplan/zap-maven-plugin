@@ -26,7 +26,7 @@ public abstract class ZapMojo extends AbstractMojo {
 	/**
      * Disables the plug-in execution.
      */
-    @Parameter( property = "zap.skip", defaultValue = "false") private boolean skip;
+    @Parameter(property = "zap.skip", defaultValue = "false") private boolean skip;
     
 	// Analysis
 	@Parameter(required=true) private String targetUrl;
@@ -40,13 +40,49 @@ public abstract class ZapMojo extends AbstractMojo {
 	@Parameter(defaultValue="true")  private boolean shouldStartNewSession;
 	
 	// ZAP
+	/**
+	 * Port where ZAP is running or will run.
+	 */
 	@Parameter(required=true) private Integer zapPort;
-	@Parameter private String zapHost;
-	@Parameter private String zapApiKey;
+	
+	/**
+	 * Host where ZAP is running.
+	 */
+	@Parameter(defaultValue="localhost") private String zapHost;
+	
+	/**
+	 * API key needed to access ZAP's API, in case it's enabled.
+	 */
+	@Parameter(defaultValue="") private String zapApiKey;
+	
+	/**
+	 * Absolute path where ZAP is installed, used to automatically start ZAP.
+	 */
 	@Parameter private String zapPath;
-	@Parameter private String zapOptions;
-	@Parameter private boolean shouldRunWithDocker;
+	
+	/**
+	 * JVM options used to launch ZAP.
+	 */
+	@Parameter(defaultValue="-Xmx512m") private String zapJvmOptions;
+	
+	/**
+	 * Options that will be used to automatically start ZAP.
+	 */
+	@Parameter(defaultValue=ZapInfo.DEFAULT_OPTIONS) private String zapOptions;
+	
+	/**
+	 * Indicates whether ZAP should be automatically started with Docker.
+	 */
+	@Parameter(defaultValue="false") private boolean shouldRunWithDocker;
+	
+	/**
+	 * ZAP's automatic initialization timeout in milliseconds.
+	 */
 	@Parameter(defaultValue="120000") private Integer initializationTimeoutInMillis;
+	
+	/**
+	 * Absolute or relative path where the generated reports will be saved.
+	 */
 	@Parameter private File reportPath;
 
 	// Authentication
@@ -80,6 +116,7 @@ public abstract class ZapMojo extends AbstractMojo {
 				.port   (zapPort)
 				.apiKey (zapApiKey)
 				.path   (zapPath)
+				.jmvOptions(zapJvmOptions)
 				.options(zapOptions)
 				.initializationTimeoutInMillis((long) initializationTimeoutInMillis)
 				.shouldRunWithDocker(shouldRunWithDocker)

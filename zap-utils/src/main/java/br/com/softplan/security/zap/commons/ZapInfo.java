@@ -23,15 +23,17 @@ public final class ZapInfo {
 
 	private static final String DEFAULT_HOST = "localhost";
 	private static final String DEFAULT_KEY = "";
-	private static final long DEFAULT_INITIALIZATION_TIMEOUT_IN_MILLIS  = 120 * 1000;
-	private static final String DEFAULT_OPTIONS = "-daemon -config api.disablekey=true -config api.incerrordetails=true -config proxy.ip=0.0.0.0";
+	private static final Long DEFAULT_INITIALIZATION_TIMEOUT_IN_MILLIS  = new Long(120000);
+	private static final String DEFAULT_JVM_OPTIONS = "-Xmx512m";
+	public static final String DEFAULT_OPTIONS = "-daemon -config api.disablekey=true -config api.incerrordetails=true -config proxy.ip=0.0.0.0";
 	
 	private String host;
 	private Integer port;
 	private String apiKey;
 	private String path;
+	private String jmvOptions;
 	private String options;
-	private long initializationTimeoutInMillis;
+	private Long initializationTimeoutInMillis;
 	private boolean shouldRunWithDocker;
 	
 	public static Builder builder() {
@@ -54,6 +56,10 @@ public final class ZapInfo {
 		return path;
 	}
 
+	public String getJmvOptions() {
+		return jmvOptions;
+	}
+	
 	public String getOptions() {
 		return options;
 	}
@@ -72,6 +78,7 @@ public final class ZapInfo {
 		private Integer port;
 		private String apiKey = DEFAULT_KEY;
 		private String path;
+		private String jmvOptions = DEFAULT_JVM_OPTIONS;
 		private String options = DEFAULT_OPTIONS;
 		private Long initializationTimeoutInMillis = DEFAULT_INITIALIZATION_TIMEOUT_IN_MILLIS;
 		private boolean shouldRunWithDocker; 
@@ -238,6 +245,20 @@ public final class ZapInfo {
 		}
 		
 		/**
+		 * Sets the JVM options used to run ZAP.
+		 * <p>
+		 * This should be used when ZAP is installed locally and it is automatically started and stopped.
+		 * 
+		 * @param jmvOptions the JVM options used to start ZAP.
+		 * @return this {@code Builder} instance.
+		 * @see #path(String)
+		 */
+		public Builder jmvOptions(String jmvOptions) {
+			this.jmvOptions = jmvOptions;
+			return this;
+		}
+		
+		/**
 		 * Sets the options used to start ZAP.
 		 * <p>
 		 * This should be used to overwrite the default options used to start ZAP (locally or in a Docker image). 
@@ -299,6 +320,7 @@ public final class ZapInfo {
 		this.port                  = builder.port;
 		this.apiKey                = builder.apiKey;
 		this.path                  = builder.path;
+		this.jmvOptions            = builder.jmvOptions;
 		this.options               = builder.options;
 		this.initializationTimeoutInMillis = builder.initializationTimeoutInMillis;
 		this.shouldRunWithDocker   = builder.shouldRunWithDocker;
@@ -311,6 +333,7 @@ public final class ZapInfo {
 				.append("port", port)
 				.append("apiKey", apiKey)
 				.append("path", path)
+				.append("jvmOptions", jmvOptions)
 				.append("options", options)
 				.append("initializationTimeout", initializationTimeoutInMillis)
 				.append("shouldRunWithDocker", shouldRunWithDocker)

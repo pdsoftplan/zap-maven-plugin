@@ -25,8 +25,6 @@ public class ZapLocalBoot extends AbstractZapBoot {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ZapLocalBoot.class);
 	
-	private static final String DEFAULT_ZAP_START_COMMAND = "java -Xmx512m -jar ";
-	
 	private static Process zap;
 	
 	@Override
@@ -67,7 +65,11 @@ public class ZapLocalBoot extends AbstractZapBoot {
 	}
 	
 	private static String buildStartCommand(ZapInfo zapInfo) {
-		StringBuilder startCommand = new StringBuilder(DEFAULT_ZAP_START_COMMAND);
+		StringBuilder startCommand = new StringBuilder();
+		
+		startCommand.append("java").append(" ");
+		startCommand.append(zapInfo.getJmvOptions()).append(" ");
+		startCommand.append("-jar").append(" ");
 		
 		try {
 			String zapJarName = retrieveZapJarName(zapInfo.getPath());
