@@ -29,14 +29,46 @@ public abstract class ZapMojo extends AbstractMojo {
     @Parameter(property = "zap.skip", defaultValue = "false") private boolean skip;
     
 	// Analysis
+    /**
+     * URL of the application that will be scanned.
+     */
 	@Parameter(required=true) private String targetUrl;
+	
+	/**
+	 * Starting point URL for the Spider (and AJAX Spider, in case it runs).
+	 */
 	@Parameter private String spiderStartingPointUrl;
+	
+	/**
+	 * Starting point URL for the Active Scan.
+	 */
 	@Parameter private String activeScanStartingPointUrl;
+	
+	/**
+	 * The URLs to be set on ZAP's context (absolute or relative).
+	 */
 	@Parameter private String[] context;
+	
 	@Parameter private String[] technologies;
+	
+	/**
+	 * Analysis timeout in minutes.
+	 */
 	@Parameter(defaultValue="480")   private int analysisTimeoutInMinutes;
+	
+	/**
+	 * Indicates whether ZAP should execute the AJAX Spider after the default Spider (it can improve the scan on applications that rely on AJAX).
+	 */
 	@Parameter(defaultValue="false") private boolean shouldRunAjaxSpider;
+	
+	/**
+	 * In case it's true, the Active Scan will not be executed.
+	 */
 	@Parameter(defaultValue="false") private boolean shouldRunPassiveScanOnly;
+	
+	/**
+	 * Indicates whether a new session should be started on ZAP before the analysis.
+	 */
 	@Parameter(defaultValue="true")  private boolean shouldStartNewSession;
 	
 	// ZAP
@@ -86,28 +118,87 @@ public abstract class ZapMojo extends AbstractMojo {
 	@Parameter private File reportPath;
 
 	// Authentication
+	/**
+	 * Define the authentication type: 'http', 'form', 'cas' or 'selenium'.
+	 */
 	@Parameter private String authenticationType;
+	
+	/**
+	 * Login page URL.
+	 */
 	@Parameter private String loginUrl;
+	
+	/**
+	 * Username used in the authentication.
+	 */
 	@Parameter private String username;
+	
+	/**
+	 * Password used in the authentication.
+	 */
 	@Parameter private String password;
+	
+	/**
+	 * Used to define any extra parameters that must be passed in the authentication request (e.g. domain=someDomain&amp;param=value)
+	 */
 	@Parameter private String extraPostData;
+	
+	/**
+	 * Regex that identifies a pattern in authenticated responses (needed to allow re-authentication).
+	 */
 	@Parameter private String loggedInRegex;
+	
+	/**
+	 * Regex that identifies a pattern in non-authenticated responses (needed to allow re-authentication).
+	 */
 	@Parameter private String loggedOutRegex;
+	
+	/**
+	 * Define the URLs regexs that will be excluded from the scan.
+	 */
 	@Parameter private String[] excludeFromScan;
 	
 	// CAS
+	/**
+	 * Define the URL of a protected page of the application that will be scanned.
+	 */
 	@Parameter private String[] protectedPages;
 
 	// Form and Selenium
+	/**
+	 * Name of the request parameter that holds the username.
+	 */
 	@Parameter(defaultValue="username") private String usernameParameter;
+	
+	/**
+	 * Name of the request parameter that holds the password.
+	 */
 	@Parameter(defaultValue="password") private String passwordParameter;
 	
+	/**
+	 * Any additional session tokens that should be added to ZAP prior authentication.
+	 */
 	@Parameter private String[] httpSessionTokens;
+	
+	/**
+	 * The web driver that will be used to perform authentication: 'htmlunit', 'firefox', or 'phantomjs'.
+	 */
 	@Parameter(defaultValue="firefox") private String seleniumDriver;
 	
 	// HTTP
+	/**
+	 * The host name of the server where the authentication is done.
+	 */
 	@Parameter private String hostname;
+	
+	/**
+	 * The realm the credentials apply to.
+	 */
 	@Parameter private String realm;
+	
+	/**
+	 * The port of the server where the authentication is done.
+	 */
 	@Parameter(defaultValue="80") private int port;
 	
 	protected ZapInfo buildZapInfo() {
