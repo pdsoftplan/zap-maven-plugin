@@ -95,7 +95,7 @@ zapJvmOptions        | JVM options used to launch ZAP                           
 shouldRunWithDocker  | Indicates whether ZAP should be automatically started with Docker           | No  | false
 zapOptions           | Options that will be used to automatically start ZAP                        | No  | See bellow
 initializationTimeoutInMillis | ZAP's automatic initialization timeout in milliseconds    | No  | 120000
-reportPath  | Absolute or relative path where the generated reports will be saved         | No  | ${user.dir}/target/zapReports
+reportPath  | Absolute or relative path where the generated reports will be saved         | No  | ${project.build.directory}/zap-reports
 
 > To automatically start ZAP, it must be installed locally and the option *zapPath* must be provided. If the installation folder contains more than one Jar, *zapPath* should point to the core Jar file. To start ZAP with Docker, Docker must be locally installed and the option *shouldRunWithDocker* must be passed as *true*. In both cases, by default, ZAP is initialized with the following options:
 > ```

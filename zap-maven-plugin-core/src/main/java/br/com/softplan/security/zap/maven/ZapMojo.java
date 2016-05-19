@@ -115,7 +115,7 @@ public abstract class ZapMojo extends AbstractMojo {
 	/**
 	 * Absolute or relative path where the generated reports will be saved.
 	 */
-	@Parameter private File reportPath;
+	@Parameter(defaultValue="${project.build.directory}/zap-reports") private File reportPath;
 
 	// Authentication
 	/**
