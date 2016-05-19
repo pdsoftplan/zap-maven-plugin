@@ -26,52 +26,179 @@ public abstract class ZapMojo extends AbstractMojo {
 	/**
      * Disables the plug-in execution.
      */
-    @Parameter( property = "zap.skip", defaultValue = "false") private boolean skip;
+    @Parameter(property = "zap.skip", defaultValue = "false") private boolean skip;
     
 	// Analysis
+    /**
+     * URL of the application that will be scanned.
+     */
 	@Parameter(required=true) private String targetUrl;
+	
+	/**
+	 * Starting point URL for the Spider (and AJAX Spider, in case it runs).
+	 */
 	@Parameter private String spiderStartingPointUrl;
+	
+	/**
+	 * Starting point URL for the Active Scan.
+	 */
 	@Parameter private String activeScanStartingPointUrl;
+	
+	/**
+	 * The URLs to be set on ZAP's context (absolute or relative).
+	 */
 	@Parameter private String[] context;
+	
 	@Parameter private String[] technologies;
+	
+	/**
+	 * Analysis timeout in minutes.
+	 */
 	@Parameter(defaultValue="480")   private int analysisTimeoutInMinutes;
+	
+	/**
+	 * Indicates whether ZAP should execute the AJAX Spider after the default Spider (it can improve the scan on applications that rely on AJAX).
+	 */
 	@Parameter(defaultValue="false") private boolean shouldRunAjaxSpider;
+	
+	/**
+	 * In case it's true, the Active Scan will not be executed.
+	 */
 	@Parameter(defaultValue="false") private boolean shouldRunPassiveScanOnly;
+	
+	/**
+	 * Indicates whether a new session should be started on ZAP before the analysis.
+	 */
 	@Parameter(defaultValue="true")  private boolean shouldStartNewSession;
 	
 	// ZAP
+	/**
+	 * Port where ZAP is running or will run.
+	 */
 	@Parameter(required=true) private Integer zapPort;
-	@Parameter private String zapHost;
-	@Parameter private String zapApiKey;
+	
+	/**
+	 * Host where ZAP is running.
+	 */
+	@Parameter(defaultValue="localhost") private String zapHost;
+	
+	/**
+	 * API key needed to access ZAP's API, in case it's enabled.
+	 */
+	@Parameter(defaultValue="") private String zapApiKey;
+	
+	/**
+	 * Absolute path where ZAP is installed, used to automatically start ZAP.
+	 */
 	@Parameter private String zapPath;
-	@Parameter private String zapOptions;
-	@Parameter private boolean shouldRunWithDocker;
+	
+	/**
+	 * JVM options used to launch ZAP.
+	 */
+	@Parameter(defaultValue="-Xmx512m") private String zapJvmOptions;
+	
+	/**
+	 * Options that will be used to automatically start ZAP.
+	 */
+	@Parameter(defaultValue=ZapInfo.DEFAULT_OPTIONS) private String zapOptions;
+	
+	/**
+	 * Indicates whether ZAP should be automatically started with Docker.
+	 */
+	@Parameter(defaultValue="false") private boolean shouldRunWithDocker;
+	
+	/**
+	 * ZAP's automatic initialization timeout in milliseconds.
+	 */
 	@Parameter(defaultValue="120000") private Integer initializationTimeoutInMillis;
+	
+	/**
+	 * Absolute or relative path where the generated reports will be saved.
+	 */
 	@Parameter private File reportPath;
 
 	// Authentication
+	/**
+	 * Define the authentication type: 'http', 'form', 'cas' or 'selenium'.
+	 */
 	@Parameter private String authenticationType;
+	
+	/**
+	 * Login page URL.
+	 */
 	@Parameter private String loginUrl;
+	
+	/**
+	 * Username used in the authentication.
+	 */
 	@Parameter private String username;
+	
+	/**
+	 * Password used in the authentication.
+	 */
 	@Parameter private String password;
+	
+	/**
+	 * Used to define any extra parameters that must be passed in the authentication request (e.g. domain=someDomain&amp;param=value)
+	 */
 	@Parameter private String extraPostData;
+	
+	/**
+	 * Regex that identifies a pattern in authenticated responses (needed to allow re-authentication).
+	 */
 	@Parameter private String loggedInRegex;
+	
+	/**
+	 * Regex that identifies a pattern in non-authenticated responses (needed to allow re-authentication).
+	 */
 	@Parameter private String loggedOutRegex;
+	
+	/**
+	 * Define the URLs regexs that will be excluded from the scan.
+	 */
 	@Parameter private String[] excludeFromScan;
 	
 	// CAS
+	/**
+	 * Define the URL of a protected page of the application that will be scanned.
+	 */
 	@Parameter private String[] protectedPages;
 
 	// Form and Selenium
+	/**
+	 * Name of the request parameter that holds the username.
+	 */
 	@Parameter(defaultValue="username") private String usernameParameter;
+	
+	/**
+	 * Name of the request parameter that holds the password.
+	 */
 	@Parameter(defaultValue="password") private String passwordParameter;
 	
+	/**
+	 * Any additional session tokens that should be added to ZAP prior authentication.
+	 */
 	@Parameter private String[] httpSessionTokens;
+	
+	/**
+	 * The web driver that will be used to perform authentication: 'htmlunit', 'firefox', or 'phantomjs'.
+	 */
 	@Parameter(defaultValue="firefox") private String seleniumDriver;
 	
 	// HTTP
+	/**
+	 * The host name of the server where the authentication is done.
+	 */
 	@Parameter private String hostname;
+	
+	/**
+	 * The realm the credentials apply to.
+	 */
 	@Parameter private String realm;
+	
+	/**
+	 * The port of the server where the authentication is done.
+	 */
 	@Parameter(defaultValue="80") private int port;
 	
 	protected ZapInfo buildZapInfo() {
@@ -80,6 +207,7 @@ public abstract class ZapMojo extends AbstractMojo {
 				.port   (zapPort)
 				.apiKey (zapApiKey)
 				.path   (zapPath)
+				.jmvOptions(zapJvmOptions)
 				.options(zapOptions)
 				.initializationTimeoutInMillis((long) initializationTimeoutInMillis)
 				.shouldRunWithDocker(shouldRunWithDocker)
