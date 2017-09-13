@@ -1,7 +1,7 @@
 # ZAP Maven Plugin
 
-[![Build Status](https://travis-ci.org/pdsoftplan/zap-maven-plugin.svg?branch=master)](https://travis-ci.org/pdsoftplan/zap-maven-plugin)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/br.com.softplan.security.zap/zap-maven-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/br.com.softplan.security.zap/zap-maven-plugin)
+[![Build Status](https://travis-ci.org/hypery2k/zap-maven-plugin.svg)](https://travis-ci.org/hypery2k/zap-maven-plugin)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.hyper2k/zap-maven-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.hyper2k/zap-maven-plugin)
 
 > Check out the [ZAP SonarQube Plugin](https://github.com/pdsoftplan/sonar-zap)
 
@@ -32,7 +32,7 @@ Generally, the plugin configuration will follow the format below:
 
 ```xml
 <plugin>
-    <groupId>br.com.softplan.security.zap</groupId>
+    <groupId>com.hyper2k</groupId>
     <artifactId>zap-maven-plugin</artifactId>
     <version>${zap-maven-plugin.version}</version>
     <configuration>
@@ -49,7 +49,7 @@ Generally, the plugin configuration will follow the format below:
 
 > If you want to bind the plugin execution to the build lifecycle, it is necessary to define the phase where the plugin will be executed, as well as the goal that will be executed. Optionally, the plugin can be executed by directly calling the desired goal:
 > ```
-> mvn br.com.softplan.security.zap:zap-maven-plugin:analyze
+> mvn com.hyper2k:zap-maven-plugin:analyze
 > ```
 
 The main goal provided is *analyze*, responsible to execute a ZAP analysis according to the configuration parameters. However, the plugin also provides other goals for more specific situations. The list of available goals is presented bellow:
@@ -182,7 +182,7 @@ For this to work, ZAP must already be running.
 
 ```xml
 <plugin>
-    <groupId>br.com.softplan.security.zap</groupId>
+    <groupId>com.hyper2k</groupId>
     <artifactId>zap-maven-plugin</artifactId>
     <version>${zap-maven-plugin.version}</version>
     <configuration>
@@ -200,7 +200,7 @@ For ZAP to be automatically started, the option *zapPath* must be provided with 
 
 ```xml
 <plugin>
-	<groupId>br.com.softplan.security.zap</groupId>
+	<groupId>com.hyper2k</groupId>
 	<artifactId>zap-maven-plugin</artifactId>
 	<version>${zap-maven-plugin.version}</version>
 	<configuration>
@@ -219,7 +219,7 @@ If ZAP is not installed, you can still start ZAP with Docker. For this, Docker m
 
 ```xml
 <plugin>
-	<groupId>br.com.softplan.security.zap</groupId>
+	<groupId>com.hyper2k</groupId>
 	<artifactId>zap-maven-plugin</artifactId>
 	<version>${zap-maven-plugin.version}</version>
 	<configuration>
@@ -234,7 +234,7 @@ If ZAP is not installed, you can still start ZAP with Docker. For this, Docker m
 
 ```xml
 <plugin>
-	<groupId>br.com.softplan.security.zap</groupId>
+	<groupId>com.hyper2k</groupId>
 	<artifactId>zap-maven-plugin</artifactId>
 	<version>${zap-maven-plugin.version}</version>
 	<configuration>
@@ -256,7 +256,7 @@ If ZAP is not installed, you can still start ZAP with Docker. For this, Docker m
 
 ```xml
 <plugin>
-	<groupId>br.com.softplan.security.zap</groupId>
+	<groupId>com.hyper2k</groupId>
 	<artifactId>zap-maven-plugin</artifactId>
 	<version>${zap-maven-plugin.version}</version>
 	<configuration>
@@ -281,7 +281,7 @@ If ZAP is not installed, you can still start ZAP with Docker. For this, Docker m
 
 ```xml
 <plugin>
-	<groupId>br.com.softplan.security.zap</groupId>
+	<groupId>com.hyper2k</groupId>
 	<artifactId>zap-maven-plugin</artifactId>
 	<version>${zap-maven-plugin.version}</version>
 	<configuration>
@@ -336,7 +336,7 @@ With that done, all that remains are the plugin goals configuration:
 
 ```xml
 <plugin>
-    <groupId>br.com.softplan.security.zap</groupId>
+    <groupId>com.hyper2k</groupId>
     <artifactId>zap-maven-plugin</artifactId>
     <version>${zap-maven-plugin.version}</version>
     <configuration>
