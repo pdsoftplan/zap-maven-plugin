@@ -4,9 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import br.com.softplan.security.zap.api.exception.ZapClientException;
-import br.com.softplan.security.zap.zaproxy.clientapi.core.ApiResponse;
-import br.com.softplan.security.zap.zaproxy.clientapi.core.ClientApi;
-import br.com.softplan.security.zap.zaproxy.clientapi.core.ClientApiException;
+import org.zaproxy.clientapi.core.ApiResponse;
+import org.zaproxy.clientapi.core.ClientApi;
+import org.zaproxy.clientapi.core.ClientApiException;
 
 /**
  * Class to manage ZAP sessions. 
