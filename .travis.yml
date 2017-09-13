@@ -7,5 +7,5 @@ jdk:
   - oraclejdk8
   - openjdk7
 
-install: cd zap-maven-plugin-parent && mvn install -DskipTests=true -q
-script: cd zap-maven-plugin-parent && mvn verify -B -q
+install: cd zap-maven-plugin-parent && mvn install -DskipTests=true -q && cd ..
+script: cd zap-maven-plugin-parent && mvn verify -B -q && cd ..
