@@ -3,9 +3,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>br.com.softplan.security.zap</groupId>
+		<groupId>com.hyper2k</groupId>
 		<artifactId>zap-maven-plugin-parent</artifactId>
-		<version>1.2.2-0-SNAPSHOT</version>
+		<version>0.1.0-SNAPSHOT</version>
 		<relativePath>../zap-maven-plugin-parent</relativePath>
 	</parent>
 
@@ -14,7 +14,7 @@
 	
 	<name>ZAP Maven Plugin</name>
 	<description>OWASP Zed Attack Proxy (ZAP) Maven plugin</description>
-	<url>https://github.com/pdsoftplan/zap-maven-plugin</url>
+	<url>https://github.com/hypery2k/zap-maven-plugin</url>
 	<inceptionYear>2015</inceptionYear>
 	<organization>
 		<name>Softplan</name>
@@ -47,12 +47,12 @@
 	<scm>
 		<connection>scm:git:git@github.com:pdsoftplan/zap-maven-plugin.git</connection>
 		<developerConnection>scm:git:git@github.com:pdsoftplan/zap-maven-plugin.git</developerConnection>
-		<url>https://github.com/pdsoftplan/zap-maven-plugin</url>
+		<url>https://github.com/hypery2k/zap-maven-plugin</url>
 	</scm>
 
 	<issueManagement>
 		<system>GitHub</system>
-		<url>https://github.com/pdsoftplan/zap-maven-plugin/issues</url>
+		<url>https://github.com/hypery2k/zap-maven-plugin/issues</url>
 	</issueManagement>
 	<ciManagement>
 		<system>Travis</system>
@@ -61,7 +61,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>br.com.softplan.security.zap</groupId>
+			<groupId>com.hyper2k</groupId>
 			<artifactId>zap-client-api</artifactId>
 		</dependency>
 		<dependency>

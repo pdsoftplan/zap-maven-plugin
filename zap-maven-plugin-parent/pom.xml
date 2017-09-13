@@ -2,14 +2,14 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>br.com.softplan.security.zap</groupId>
+	<groupId>com.hyper2k</groupId>
 	<artifactId>zap-maven-plugin-parent</artifactId>
-	<version>1.2.2-0-SNAPSHOT</version>
+	<version>0.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	
 	<name>ZAP Maven Plugin Parent</name>
 	<description>Parent project for the ZAP Maven Plugin</description>
-	<url>https://github.com/pdsoftplan/zap-maven-plugin</url>
+	<url>https://github.com/hypery2k/zap-maven-plugin</url>
 	<inceptionYear>2015</inceptionYear>
 	<organization>
 		<name>Softplan</name>
@@ -48,12 +48,12 @@
 	<scm>
 		<connection>scm:git:git@github.com:pdsoftplan/zap-maven-plugin.git</connection>
 		<developerConnection>scm:git:git@github.com:pdsoftplan/zap-maven-plugin.git</developerConnection>
-		<url>https://github.com/pdsoftplan/zap-maven-plugin</url>
+		<url>https://github.com/hypery2k/zap-maven-plugin</url>
 	</scm>
 
 	<issueManagement>
 		<system>GitHub</system>
-		<url>https://github.com/pdsoftplan/zap-maven-plugin/issues</url>
+		<url>https://github.com/hypery2k/zap-maven-plugin/issues</url>
 	</issueManagement>
 	<ciManagement>
 		<system>Travis</system>
@@ -159,12 +159,12 @@
 
 			<!-- Project modules version -->
 			<dependency>
-				<groupId>br.com.softplan.security.zap</groupId>
+				<groupId>com.hyper2k</groupId>
 				<artifactId>zap-utils</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>br.com.softplan.security.zap</groupId>
+				<groupId>com.hyper2k</groupId>
 				<artifactId>zap-client-api</artifactId>
 				<version>${project.version}</version>
 			</dependency>
