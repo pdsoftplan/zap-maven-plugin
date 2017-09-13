@@ -4,7 +4,7 @@ import org.testng.annotations.BeforeClass;
 
 import br.com.softplan.security.zap.api.ZapClient;
 import br.com.softplan.security.zap.commons.ZapInfo;
-import br.com.softplan.security.zap.zaproxy.clientapi.core.ClientApi;
+import org.zaproxy.clientapi.core.ClientApi;
 
 /**
  * Base class for integration tests. 

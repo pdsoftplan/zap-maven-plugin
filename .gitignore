@@ -3,6 +3,7 @@
 .classpath
 .project
 .idea/
+*.iml
 
 # Maven
 target/

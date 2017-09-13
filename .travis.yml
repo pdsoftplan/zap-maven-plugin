@@ -1,9 +1,11 @@
 language: java
-
+sudo: false
+cache:
+  directories:
+  - $HOME/.m2
 jdk:
   - oraclejdk8
-  - oraclejdk7
   - openjdk7
-  
-before_install:
-  - cd zap-maven-plugin-parent
+
+install: cd zap-maven-plugin-parent && mvn install -DskipTests=true -q && cd ..
+script: cd zap-maven-plugin-parent && mvn verify -B -q && cd ..

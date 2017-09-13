@@ -7,10 +7,10 @@ import org.slf4j.LoggerFactory;
 
 import br.com.softplan.security.zap.api.exception.ZapClientException;
 import br.com.softplan.security.zap.api.model.AnalysisInfo;
-import br.com.softplan.security.zap.zaproxy.clientapi.core.ApiResponse;
-import br.com.softplan.security.zap.zaproxy.clientapi.core.ApiResponseElement;
-import br.com.softplan.security.zap.zaproxy.clientapi.core.ClientApi;
-import br.com.softplan.security.zap.zaproxy.clientapi.core.ClientApiException;
+import org.zaproxy.clientapi.core.ApiResponse;
+import org.zaproxy.clientapi.core.ApiResponseElement;
+import org.zaproxy.clientapi.core.ClientApi;
+import org.zaproxy.clientapi.core.ClientApiException;
 
 /**
  * Helper to be used by classes that make calls to the ZAP API.
