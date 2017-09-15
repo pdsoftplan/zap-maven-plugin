@@ -1,12 +1,12 @@
 properties properties: [
   [$class: 'BuildDiscarderProperty', strategy: [$class: 'LogRotator', artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '30', numToKeepStr: '10']],
+  parameters([
+          string(defaultValue: '', description: '', name: 'releaseVersion')]
+  ),
   disableConcurrentBuilds()
 ]
 
-@Library('mare-build-library')
-def git = new de.mare.ci.jenkins.Git()
-
-timeout(60) {
+timeout(20) {
   node {
     def buildNumber = env.BUILD_NUMBER
     def branchName = env.BRANCH_NAME
@@ -28,29 +28,12 @@ timeout(60) {
         }
         
         dir('zap-maven-plugin-parent') {
-          stage('Build') {
-            sh "mvn package -DskipUnitTests=true"
-          }
-
-          stage('Unit-Tests') {
-            sh "mvn test -Dmaven.test.failure.ignore"
-          }
-
-          stage('Integration-Tests') {
-            // TODO
-          }
-
-          stage('Deploy') {
-            if(git. isProductionBranch()){
-              sh "mvn -Prelease package source:jar gpg:sign install:install deploy:deploy"
-            } else {
-              sh "mvn deploy"
-            }
+          stage('Start Release') {
+            echo "releaseVersion: ${releaseVersion}"
+            sh "mvn gitflow:release -DreleaseVersion=${releaseVersion} -DskipITs=true "
           }
         }
 
-        archiveArtifacts artifacts: '*/target/*.jar'
-        junit healthScaleFactor: 1.0, testResults: '*/target/surefire-reports/TEST*.xml'
       }
     } catch (e) {
       mail subject: "${env.JOB_NAME} (${env.BUILD_NUMBER}): Error on build", to: 'github@martinreinhardt-online.de', body: "Please go to ${env.BUILD_URL}."
