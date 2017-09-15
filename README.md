@@ -1,6 +1,7 @@
 # ZAP Maven Plugin
 
 [![Build Status](https://travis-ci.org/hypery2k/zap-maven-plugin.svg)](https://travis-ci.org/hypery2k/zap-maven-plugin)
+[![Build Status](https://martinreinhardt-online.de/jenkins/buildStatus/icon?job=zap-maven-plugin/master)](https://martinreinhardt-online.de/jenkins/blue/organizations/jenkins/zap-maven-plugin/branches/)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.martinreinhardt-online/zap-maven-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.martinreinhardt-online/zap-maven-plugin)
 
 > Check out the [ZAP SonarQube Plugin](https://github.com/pdsoftplan/sonar-zap)
@@ -73,7 +74,7 @@ skip                           | Skip the plugin execution (equivalent CLI prope
 Parameter | Description | Required? | Default
 --- | --- | --- | ---
 targetUrl                      | URL of the application that will be scanned                          | Yes | -
-failingRiskCode                | risk code at which maven test should fail, see [here](https://www.owasp.org/index.php/OWASP_Risk_Rating_Methodology#Step_4:_Determining_the_Severity_of_the_Risk)                            | No  | -   
+failingRiskCodeThreshold       | threashold of risk code at which maven test should fail, see [here](https://www.owasp.org/index.php/OWASP_Risk_Rating_Methodology#Step_4:_Determining_the_Severity_of_the_Risk)                            | No  | -   
 spiderStartingPointUrl         | Starting point URL for the Spider (and AJAX Spider, in case it runs) | No  | *targetUrl*
 activeScanStartingPointUrl     | Starting point URL for the Active Scan                               | No  | *targetUrl*
 context                        | The URLs to be set on ZAP's context (absolute or relative)           | No  | *targetUrl*
