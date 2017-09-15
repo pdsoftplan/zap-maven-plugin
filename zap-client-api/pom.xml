@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.hyper2k</groupId>
+        <groupId>de.martinreinhardt-online</groupId>
         <artifactId>zap-maven-plugin-parent</artifactId>
         <version>0.1.0-SNAPSHOT</version>
         <relativePath>../zap-maven-plugin-parent</relativePath>
@@ -104,8 +104,9 @@
             <artifactId>phantomjsdriver</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.hyper2k</groupId>
+            <groupId>de.martinreinhardt-online</groupId>
             <artifactId>zap-utils</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
