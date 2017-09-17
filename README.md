@@ -7,11 +7,19 @@
 > Check out the [ZAP SonarQube Plugin](https://github.com/pdsoftplan/sonar-zap)
 
 This plugin makes it easier to integrate [OWASP Zed Attack Proxy (ZAP)](https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project) security tests with the application development and build process for Maven users. With this plugin, you can:
-
 - Run ZAP analysis during the build of your application;
 - Run authenticated analysis on [CAS](http://jasig.github.io/cas/) and on many other applications with complex authentication strategies;
 - Use your [Selenium](http://www.seleniumhq.org) integration tests navigation to feed ZAP;
 - Easily run ZAP analysis during development.
+
+> Feel free to **donate**
+> 
+> <a href='http://www.pledgie.com/campaigns/34775'><img alt='Click here to lend your support and make a donation at www.pledgie.com !' src='http://www.pledgie.com/campaigns/34775.png?skin_name=chrome' border='0' /></a>
+> <a target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=UW7NTQ6QBR89N">
+> <img alt="" border="0" src="https://www.paypalobjects.com/de_DE/DE/i/btn/btn_donateCC_LG.gif"/>
+> </img></a>
+> Or donate [Bitcoins](bitcoin:3NKtxw1SRYgess5ev4Ri54GekoAgkR213D) or via [greenaddress](https://greenaddress.it/pay/GA3ZPfh7As3Gc2oP6pQ1njxMij88u/)
+
 
 ## Contents
 
@@ -47,6 +55,8 @@ Generally, the plugin configuration will follow the format below:
     </executions>
 </plugin>
 ```
+
+You can find an example [here](https://github.com/hypery2k/web-security-sample/blob/master/angular-spring-boot-webapp/pom.xml#L448). 
 
 > If you want to bind the plugin execution to the build lifecycle, it is necessary to define the phase where the plugin will be executed, as well as the goal that will be executed. Optionally, the plugin can be executed by directly calling the desired goal:
 > ```
