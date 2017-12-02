@@ -87,6 +87,7 @@
         <nexus-staging-maven-plugin.version>1.6.6</nexus-staging-maven-plugin.version>
 
         <!-- Dependencies versions -->
+        <zap-api-java.version>1.5.0</zap-api-java.version>
         <jdom.version>1.1.1</jdom.version>
         <selenium.version>2.49.1</selenium.version>
         <phantomjsdriver.version>1.2.0</phantomjsdriver.version>

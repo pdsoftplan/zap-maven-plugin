@@ -37,7 +37,7 @@ timeout(60) {
           }
 
           stage('Integration-Tests') {
-            // TODO
+            // TODO add for OWASP ZAP version 2.7.0
           }
 
           stage('Deploy') {
