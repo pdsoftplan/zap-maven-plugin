@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/hypery2k/zap-maven-plugin.svg)](https://travis-ci.org/hypery2k/zap-maven-plugin)
 [![Build Status](https://martinreinhardt-online.de/jenkins/buildStatus/icon?job=zap-maven-plugin/pipeline/master)](https://martinreinhardt-online.de/jenkins/blue/organizations/jenkins/zap-maven-plugin%2Fpipeline/branches/)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.martinreinhardt-online/zap-maven-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.martinreinhardt-online/zap-maven-plugin)
+[![Quality Status](https://sonarcloud.io/api/badges/gate?key=de.martinreinhardt-online:zap-maven-plugin-parent)](https://sonarcloud.io/dashboard?id=de.martinreinhardt-online%3Azap-maven-plugin-parent)
 
 > Check out the [ZAP SonarQube Plugin](https://github.com/pdsoftplan/sonar-zap)
 
