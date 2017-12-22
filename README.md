@@ -1,16 +1,31 @@
 # ZAP Maven Plugin
 
-[![Build Status](https://travis-ci.org/pdsoftplan/zap-maven-plugin.svg?branch=master)](https://travis-ci.org/pdsoftplan/zap-maven-plugin)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/br.com.softplan.security.zap/zap-maven-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/br.com.softplan.security.zap/zap-maven-plugin)
+[![Build Status](https://travis-ci.org/hypery2k/zap-maven-plugin.svg)](https://travis-ci.org/hypery2k/zap-maven-plugin)
+[![Build Status](https://martinreinhardt-online.de/jenkins/buildStatus/icon?job=zap-maven-plugin/pipeline/master)](https://martinreinhardt-online.de/jenkins/blue/organizations/jenkins/zap-maven-plugin%2Fpipeline/branches/)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.martinreinhardt-online/zap-maven-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.martinreinhardt-online/zap-maven-plugin)
+[![Quality Status](https://sonarcloud.io/api/badges/gate?key=de.martinreinhardt-online:zap-maven-plugin-parent)](https://sonarcloud.io/dashboard?id=de.martinreinhardt-online%3Azap-maven-plugin-parent)
 
 > Check out the [ZAP SonarQube Plugin](https://github.com/pdsoftplan/sonar-zap)
 
 This plugin makes it easier to integrate [OWASP Zed Attack Proxy (ZAP)](https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project) security tests with the application development and build process for Maven users. With this plugin, you can:
-
 - Run ZAP analysis during the build of your application;
 - Run authenticated analysis on [CAS](http://jasig.github.io/cas/) and on many other applications with complex authentication strategies;
 - Use your [Selenium](http://www.seleniumhq.org) integration tests navigation to feed ZAP;
 - Easily run ZAP analysis during development.
+
+<a name="donation"></a>
+> Feel free to **donate**
+>
+> <a href='http://www.pledgie.com/campaigns/33053'><img alt='Click here to lend your support and make a donation at www.pledgie.com !' src='http://www.pledgie.com/campaigns/33053.png?skin_name=chrome' border='0' /></a>
+> <a target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=AGPGLZYNV6Y5S">
+> <img alt="" border="0" src="https://www.paypalobjects.com/de_DE/DE/i/btn/btn_donateCC_LG.gif"/>
+> </img></a>
+> Or donate Bitcoins: bitcoin:3NKtxw1SRYgess5ev4Ri54GekoAgkR213D
+>
+> [![Bitcoin](https://martinreinhardt-online.de/bitcoin.png)](bitcoin:3NKtxw1SRYgess5ev4Ri54GekoAgkR213D)
+>
+> Also via [greenaddress](https://greenaddress.it/pay/GA3ZPfh7As3Gc2oP6pQ1njxMij88u/)
+
 
 ## Contents
 
@@ -32,7 +47,7 @@ Generally, the plugin configuration will follow the format below:
 
 ```xml
 <plugin>
-    <groupId>br.com.softplan.security.zap</groupId>
+    <groupId>de.martinreinhardt-online</groupId>
     <artifactId>zap-maven-plugin</artifactId>
     <version>${zap-maven-plugin.version}</version>
     <configuration>
@@ -47,9 +62,11 @@ Generally, the plugin configuration will follow the format below:
 </plugin>
 ```
 
+You can find an example [here](https://github.com/hypery2k/web-security-sample/blob/master/angular-spring-boot-webapp/pom.xml#L448). 
+
 > If you want to bind the plugin execution to the build lifecycle, it is necessary to define the phase where the plugin will be executed, as well as the goal that will be executed. Optionally, the plugin can be executed by directly calling the desired goal:
 > ```
-> mvn br.com.softplan.security.zap:zap-maven-plugin:analyze
+> mvn de.martinreinhardt-online:zap-maven-plugin:analyze
 > ```
 
 The main goal provided is *analyze*, responsible to execute a ZAP analysis according to the configuration parameters. However, the plugin also provides other goals for more specific situations. The list of available goals is presented bellow:
@@ -73,6 +90,7 @@ skip                           | Skip the plugin execution (equivalent CLI prope
 Parameter | Description | Required? | Default
 --- | --- | --- | ---
 targetUrl                      | URL of the application that will be scanned                          | Yes | -
+failingRiskCodeThreshold       | threashold of risk code at which maven test should fail, see [here](https://www.owasp.org/index.php/OWASP_Risk_Rating_Methodology#Step_4:_Determining_the_Severity_of_the_Risk)                            | No  | -   
 spiderStartingPointUrl         | Starting point URL for the Spider (and AJAX Spider, in case it runs) | No  | *targetUrl*
 activeScanStartingPointUrl     | Starting point URL for the Active Scan                               | No  | *targetUrl*
 context                        | The URLs to be set on ZAP's context (absolute or relative)           | No  | *targetUrl*
@@ -182,7 +200,7 @@ For this to work, ZAP must already be running.
 
 ```xml
 <plugin>
-    <groupId>br.com.softplan.security.zap</groupId>
+    <groupId>de.martinreinhardt-online</groupId>
     <artifactId>zap-maven-plugin</artifactId>
     <version>${zap-maven-plugin.version}</version>
     <configuration>
@@ -200,7 +218,7 @@ For ZAP to be automatically started, the option *zapPath* must be provided with 
 
 ```xml
 <plugin>
-	<groupId>br.com.softplan.security.zap</groupId>
+	<groupId>de.martinreinhardt-online</groupId>
 	<artifactId>zap-maven-plugin</artifactId>
 	<version>${zap-maven-plugin.version}</version>
 	<configuration>
@@ -219,7 +237,7 @@ If ZAP is not installed, you can still start ZAP with Docker. For this, Docker m
 
 ```xml
 <plugin>
-	<groupId>br.com.softplan.security.zap</groupId>
+	<groupId>de.martinreinhardt-online</groupId>
 	<artifactId>zap-maven-plugin</artifactId>
 	<version>${zap-maven-plugin.version}</version>
 	<configuration>
@@ -234,7 +252,7 @@ If ZAP is not installed, you can still start ZAP with Docker. For this, Docker m
 
 ```xml
 <plugin>
-	<groupId>br.com.softplan.security.zap</groupId>
+	<groupId>de.martinreinhardt-online</groupId>
 	<artifactId>zap-maven-plugin</artifactId>
 	<version>${zap-maven-plugin.version}</version>
 	<configuration>
@@ -256,7 +274,7 @@ If ZAP is not installed, you can still start ZAP with Docker. For this, Docker m
 
 ```xml
 <plugin>
-	<groupId>br.com.softplan.security.zap</groupId>
+	<groupId>de.martinreinhardt-online</groupId>
 	<artifactId>zap-maven-plugin</artifactId>
 	<version>${zap-maven-plugin.version}</version>
 	<configuration>
@@ -281,7 +299,7 @@ If ZAP is not installed, you can still start ZAP with Docker. For this, Docker m
 
 ```xml
 <plugin>
-	<groupId>br.com.softplan.security.zap</groupId>
+	<groupId>de.martinreinhardt-online</groupId>
 	<artifactId>zap-maven-plugin</artifactId>
 	<version>${zap-maven-plugin.version}</version>
 	<configuration>
@@ -336,7 +354,7 @@ With that done, all that remains are the plugin goals configuration:
 
 ```xml
 <plugin>
-    <groupId>br.com.softplan.security.zap</groupId>
+    <groupId>de.martinreinhardt-online</groupId>
     <artifactId>zap-maven-plugin</artifactId>
     <version>${zap-maven-plugin.version}</version>
     <configuration>

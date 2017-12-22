@@ -2,7 +2,7 @@ package br.com.softplan.security.zap.api.authentication;
 
 import br.com.softplan.security.zap.api.model.AuthenticationInfo;
 import br.com.softplan.security.zap.commons.ZapInfo;
-import br.com.softplan.security.zap.zaproxy.clientapi.core.ClientApi;
+import org.zaproxy.clientapi.core.ClientApi;
 
 /**
  * Simple extension of {@code AbstractAuthenticationHandler} to test its functionalities.

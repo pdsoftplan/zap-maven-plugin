@@ -9,12 +9,13 @@
         <relativePath>../zap-maven-plugin-parent</relativePath>
     </parent>
 
-    <artifactId>zap-maven-plugin</artifactId>
-    <packaging>maven-plugin</packaging>
+    <artifactId>zap-report-parser</artifactId>
 
-    <name>ZAP Maven Plugin</name>
-    <description>OWASP Zed Attack Proxy (ZAP) Maven plugin</description>
+    <name>ZAP Report Parser</name>
+    <description>Java client API for the OWASP Zed Attack Proxy (ZAP), built on top of the official ZAP Java API
+    </description>
     <url>https://github.com/hypery2k/zap-maven-plugin</url>
+    <inceptionYear>2017</inceptionYear>
 
     <licenses>
         <license>
@@ -59,25 +60,72 @@
         <url>https://travis-ci.org/pdsoftplan/zap-maven-plugin</url>
     </ciManagement>
 
+    <properties>
+        <integrationTests.skipTests>true</integrationTests.skipTests>
+    </properties>
+
+    <profiles>
+        <profile>
+            <!-- To run the integration tests, run: mvn clean install -P runIT -->
+            <id>runIT</id>
+            <properties>
+                <integrationTests.skipTests>false</integrationTests.skipTests>
+            </properties>
+        </profile>
+
+        <profile>
+            <!-- Needed because of the classes brought from the ZAP Client API -->
+            <id>disable-java8-doclint</id>
+            <activation>
+                <jdk>[1.8,)</jdk>
+            </activation>
+            <properties>
+                <additionalparam>-Xdoclint:none</additionalparam>
+            </properties>
+        </profile>
+    </profiles>
+
     <dependencies>
+        <dependency>
+            <groupId>org.jopendocument</groupId>
+            <artifactId>jdom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.detro</groupId>
+            <artifactId>phantomjsdriver</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.martinreinhardt-online</groupId>
+            <artifactId>zap-utils</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>de.martinreinhardt-online</groupId>
             <artifactId>zap-client-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>de.martinreinhardt-online</groupId>
-            <artifactId>zap-report-parser</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-plugin-api</artifactId>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.maven.plugin-tools</groupId>
-            <artifactId>maven-plugin-annotations</artifactId>
-            <scope>provided</scope>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-configuration</groupId>
+            <artifactId>commons-configuration</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -85,39 +133,12 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-plugin-plugin</artifactId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <skipTests>${integrationTests.skipTests}</skipTests>
+                </configuration>
             </plugin>
         </plugins>
-
-        <pluginManagement>
-            <plugins>
-                <!-- This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself -->
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>org.apache.maven.plugins</groupId>
-                                        <artifactId>maven-plugin-plugin</artifactId>
-                                        <versionRange>[${maven.plugin.plugin.version},)</versionRange>
-                                        <goals>
-                                            <goal>descriptor</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore></ignore>
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
     </build>
 
 </project>

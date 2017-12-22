@@ -1,7 +1,7 @@
 package br.com.softplan.security.zap.api.analysis;
 
 import br.com.softplan.security.zap.api.model.AnalysisInfo;
-import br.com.softplan.security.zap.zaproxy.clientapi.core.ClientApi;
+import org.zaproxy.clientapi.core.ClientApi;
 
 /**
  * Factory to create the correct {@link Analyzer} implementation based on the given {@link AnalysisInfo} instance.

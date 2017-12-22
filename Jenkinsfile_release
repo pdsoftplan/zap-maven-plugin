@@ -1,0 +1,43 @@
+properties properties: [
+  [$class: 'BuildDiscarderProperty', strategy: [$class: 'LogRotator', artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '30', numToKeepStr: '10']],
+  parameters([
+          string(defaultValue: '', description: '', name: 'releaseVersion')]
+  ),
+  disableConcurrentBuilds()
+]
+
+timeout(20) {
+  node {
+    def buildNumber = env.BUILD_NUMBER
+    def branchName = env.BRANCH_NAME
+    def workspace = env.WORKSPACE
+    def buildUrl = env.BUILD_URL
+
+    try {
+      withEnv(["JAVA_HOME=${tool 'JDK8'}", "PATH+MAVEN=${tool 'Maven3'}/bin:${env.JAVA_HOME}/bin"]) {
+
+        // PRINT ENVIRONMENT TO JOB
+        echo "workspace directory is $workspace"
+        echo "build URL is $buildUrl"
+        echo "build Number is $buildNumber"
+        echo "branch name is $branchName"
+        echo "PATH is $env.PATH"
+
+        stage('Checkout') {
+          checkout scm
+        }
+        
+        dir('zap-maven-plugin-parent') {
+          stage('Start Release') {
+            echo "releaseVersion: ${releaseVersion}"
+            sh "mvn gitflow:release -DreleaseVersion=${releaseVersion} -DskipITs=true "
+          }
+        }
+
+      }
+    } catch (e) {
+      mail subject: "${env.JOB_NAME} (${env.BUILD_NUMBER}): Error on build", to: 'github@martinreinhardt-online.de', body: "Please go to ${env.BUILD_URL}."
+      throw e
+    }
+  }
+}
