@@ -47,6 +47,10 @@ timeout(60) {
               sh "mvn deploy"
             }
           }
+          
+          stage('Sonar') {
+            sh "mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=hypery2k-github -Dsonar.login=${env['sonarcloud.io.token']}"
+          }
         }
 
         archiveArtifacts artifacts: '*/target/*.jar'
