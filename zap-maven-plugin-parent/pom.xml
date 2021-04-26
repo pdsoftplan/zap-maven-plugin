@@ -90,7 +90,7 @@
 		<selenium.version>2.49.1</selenium.version>
 		<phantomjsdriver.version>1.2.0</phantomjsdriver.version>
 		<commons-lang.version>3.4</commons-lang.version>
-		<commons-io.version>2.4</commons-io.version>
+		<commons-io.version>2.7</commons-io.version>
 		<commons-configuration.version>1.10</commons-configuration.version>
 		<maven-plugin-api.version>3.3.9</maven-plugin-api.version>
 		<maven-plugin-annotations.version>3.4</maven-plugin-annotations.version>
